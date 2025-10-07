@@ -1,0 +1,373 @@
+\documentclass[12pt]{exam}
+
+\input{../config.tex}
+
+\title{Problem solving session 3}
+\author{\tiny{JS}}
+\date{17 June 2025}
+
+\begin{document}
+
+\maketitle
+\printanswers
+
+\begin{questions}
+
+\question
+  Consider an operator whose mapping is:
+  \begin{itemize}
+  \item $R_k\ket{0} = \ket{0}$ 
+  \item $R_k\ket{1} = e^{2\pi i / 2^k} \ket{1}$ 
+  \end{itemize}
+
+  \begin{parts}
+  \part
+    Prove that $R_k$ is unitary
+\begin{solution}
+If a matrix is unitary, its complex conjugate would be its inverse.
+
+  \begin{mathpar}
+    R_k = 
+    \begin{bmatrix}
+      1 & 0 \\
+      0 & e^{2\pi i / 2^k} \\
+    \end{bmatrix}
+    
+    R_k^* =
+    \begin{bmatrix}
+      1 & 0 \\
+      0 & e^{-2\pi i / 2^k} \\
+    \end{bmatrix} \\
+  \end{mathpar}
+  
+  \begin{align*}
+    R_k * R_k^* &= 
+    \begin{bmatrix}
+      1 & 0 \\
+      0 & e^{2\pi i / 2^k} \\
+    \end{bmatrix} *
+    \begin{bmatrix}
+      1 & 0 \\
+      0 & e^{-2\pi i / 2^k} \\
+    \end{bmatrix} \\
+    &= 
+    % \begin{bmatrix}
+    %   1.1 + 0.0 & 1.0 + 0.e^{-2\pi i / 2^k} \\
+    %   0.1 + e^{2\pi i / 2^k}.0 & e^{2\pi i / 2^k}e^{-2\pi i / 2^k} \\
+    % \end{bmatrix} \\
+    \begin{bmatrix}
+      1 & 0 \\
+      0 & e^{2\pi i / 2^k}e^{-2\pi i / 2^k} \\
+    \end{bmatrix} \\
+    &= 
+    \begin{bmatrix}
+      1 & 0 \\
+      0 & 1 \\
+    \end{bmatrix} \\
+    &= I
+  \end{align*}
+  
+Therefore, complex conjugate of $R_k$ is its inverse.
+Hence, $R_k$ is unitary.
+  
+\end{solution}
+
+  \part
+    Write down the eigen states, eigen values and corresponding phases
+    of $R_k$.
+\begin{solution}
+Let:
+
+\begin{itemize}
+\item 
+  Eigen state = $
+  \begin{bmatrix}
+    \alpha \\
+    \beta  \\
+  \end{bmatrix}$
+\item 
+  Eigen value = $\lambda$
+\end{itemize}
+
+Then,
+
+\begin{align*}
+R_k * 
+  \begin{bmatrix}
+    \alpha \\
+    \beta  \\
+  \end{bmatrix}
+=& 
+  \lambda 
+  \begin{bmatrix}
+    \alpha \\
+    \beta  \\
+  \end{bmatrix} \\
+\begin{bmatrix}
+  1 & 0 \\
+  0 & e^{2\pi i / 2^k} \\ 
+\end{bmatrix} 
+ *
+  \begin{bmatrix}
+    \alpha \\
+    \beta  \\
+  \end{bmatrix}
+=& 
+  \lambda 
+  \begin{bmatrix}
+    \alpha \\
+    \beta  \\
+  \end{bmatrix} \\
+  \begin{bmatrix}
+    \alpha \\
+    \beta(e^{2\pi i / 2^k})  \\
+  \end{bmatrix}
+=& 
+  \lambda 
+  \begin{bmatrix}
+    \alpha \\
+    \beta  \\
+  \end{bmatrix} \\
+\end{align*}
+
+We know that $\alpha \neq 0$ and $\beta \neq 0$.
+
+\begin{mathpar}
+  \begin{array}{rcl}
+  \alpha = \lambda \alpha & \Rightarrow & \lambda = 1  \\
+  \beta(e^{2\pi i / 2^k}) = \lambda \beta & \Rightarrow & \lambda = e^{2\pi i / 2^k}
+  \end{array}
+\end{mathpar}
+
+% \begin{itemize}
+% \item $\alpha = \lambda \alpha \Rightarrow \lambda = 1$ 
+% \item $\beta(e^{2\pi i / 2^k}) = \lambda \beta \Rightarrow \lambda = e^{2\pi i / 2^k}$ 
+% \end{itemize}
+
+Therefore, required answer is:
+
+\begin{center}
+\begin{tabular}{l|lll}
+  \toprule
+  & State & Eigen value & Phase \\
+  \midrule
+$R_k\ket{0}$ & $\ket{0}$ & 1 & 0 \\
+$R_k\ket{1}$ & $\ket{1}$ & $e^{2\pi i / 2^k}$ & $e^{2\pi i / 2^k}$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+(Phase is the coefficient of the last qubit.)
+
+\end{solution}
+  \end{parts}
+  
+%%%%%%%%%%%%
+
+\question
+  Let:
+  \begin{itemize}
+  \item $c$ denote an n-bit integer
+  \item $c = c_1 c_2 \cdots c_n$ be the bits of $c$
+  \end{itemize}
+  
+  \begin{parts}
+  \part
+    Prove that
+    \begin{mathpar}
+e^{2\pi i c / 2^n} \ket{c}
+=
+\bigotimes\limits_{j=1}^{n} e^{2\pi i c_j / 2^j} \ket{c_j}
+    \end{mathpar}
+    
+Fun fact:
+This shows how to push a value from the state to the phase of an
+amplitude.
+
+\begin{solution}
+$c$ is an integer. Expressed in bit representation.
+
+\begin{mathpar}
+  \begin{array}{rcl}
+  c & = & c_1 \cdot c_2 \cdot c_3 \cdots c_n \\
+    & = & c_1 2^{n-1} \cdot c_2 2^{n-2} \cdot c_3 2^{n-3} \cdots c_n 2^{n-n} \\
+  \end{array}
+\end{mathpar}
+
+So,
+
+  \begin{align*}
+ & e^{2\pi i c / 2^n} \ket{c_i} \\
+ & \Rightarrow
+   e^{2\pi i c_i 2^{n-i} / 2^n} \ket{c_i} \\
+ & =
+   e^{2\pi i(c_1 2^{n-1} + c_2 2^{n-2} + \cdots + \c_n 2^0)/2^n}
+   \ket{c_1 c_2 \cdots c_n} \\
+ & =
+   \prod\limits_{j=1}^{n} 
+   \left[ e^{2\pi i c_j / 2^j} \right] \ket{c_1 c_2 \cdots c_n} \\
+ & =
+   \bigotimes\limits_{j=1}^{n} e^{2\pi i c_j / 2^j} \ket{c_j}
+  \end{align*}
+\end{solution}
+
+  \part
+    Use $R_k$ gates from last question to implement 
+    \begin{mathpar}
+\ket{c} \mapsto e^{2\pi i c / 2^n}\ket{c}
+\end{mathpar}
+    
+\begin{solution}
+We need a multiplication by $e^{2\pi i c / 2^n}$ on each input qubit
+where $c_j \in \{0, 1\}$, which is exactly what $R_n$ does.
+So, use $R_n$ gate on each qubit.
+
+\begin{center}
+  \begin{quantikz}
+    \lstick{\ket{c_1}} & \gate{R_n} & \rstick[4]{$\ \ e^{2\pi i c / 2^n}$\ket{c}} \\
+    \lstick{\ket{c_2}} & \gate{R_n} &  \\
+      \vdots & \vdots  & \vdots \\
+    \lstick{\ket{c_n}} & \gate{R_n} & 
+  \end{quantikz}
+\end{center}
+
+\end{solution}
+  \end{parts}
+  
+
+%%%%%%%%%%%%
+
+\question
+  Let:
+  \begin{itemize}
+  \item $a$ be an n-bit integer and $b$ denote $(a+1) \pmod{n}$
+  \item $\ket{\hat{a}}$ denote QFT($\ket{a}$)
+  \item $\ket{\hat{b}}$ denote QFT($\ket{b}$)
+  \end{itemize}
+
+  \begin{parts}
+  \part
+    Design a quantum circuit for $\ket{\hat{a}} \mapsto \ket{\hat{b}}$
+\begin{solution}
+The equation for finding QFT (as tensor product) is:
+
+\begin{align*}
+\ket{\hat{a}}
+ % &= \bigotimes\limits_{j=1}^{n} \frac{1}{\sqrt{2}}
+ %     \left(
+ %       \ket{0} +
+ %       e^{2\pi i a (0.k_{n+j-1} \cdots k_{n})} \ket{1}
+ %     \right) \\
+ &= \bigotimes\limits_{j=1}^{n} \frac{1}{\sqrt{2}}
+     \left(
+       \ket{0} +
+       e^{2\pi i a / 2^j} \ket{1}
+     \right) \\
+\end{align*}
+
+So, t-th qubit of
+\begin{itemize}
+\item QFT($a$): $
+    \frac{1}{\sqrt{2}}
+       \left(
+         \ket{0} +
+         e^{2\pi i a / 2^t} \ket{1}
+       \right)$
+\item QFT($b$):
+  \begin{align*}
+      &  
+   \frac{1}{\sqrt{2}}
+       \left(
+         \ket{0} +
+         e^{2\pi i b / 2^t} \ket{1}
+       \right) \\
+    = & 
+   \frac{1}{\sqrt{2}}
+       \left(
+         \ket{0} +
+         e^{2\pi i (a+1) / 2^t} \ket{1}
+       \right) \\
+    = & 
+   \frac{1}{\sqrt{2}}
+       \left(
+         \ket{0} +
+         e^{2\pi i a / 2^t} e^{2\pi i/ 2^t} \ket{1}
+       \right) \\
+    = & 
+    e^{2\pi i/ 2^t}
+   \frac{1}{\sqrt{2}}
+       \left(
+         \ket{0} +
+         e^{2\pi i a / 2^t} \ket{1}
+       \right) \\
+    = & 
+    R_t
+    \left[
+   \frac{1}{\sqrt{2}}
+       \left(
+         \ket{0} +
+         e^{2\pi i a / 2^t} \ket{1}
+       \right)
+    \right] \\
+    = & 
+    R_t \ket{\hat{a}} \\
+  \end{align*}
+\end{itemize}
+
+ie, we just need to apply the $R_t$ gate (from the previous question)
+on each of the input qubits.
+
+\begin{center}
+  \begin{quantikz}
+    \lstick{\ket{\hat{a}_1}} & \gate{R_1} & \rstick{\ket{\hat{b}_1}} \\
+    \lstick{\ket{\hat{a}_2}} & \gate{R_2} & \rstick{\ket{\hat{b}_2}} \\
+      \vdots & \vdots  & \vdots \\
+    \lstick{\ket{\hat{a}_n}} & \gate{R_n} & \rstick{\ket{\hat{b}_n}} \\
+  \end{quantikz}
+\end{center}
+\end{solution}
+
+  \part
+    Design a quantum circuit using QFT for $\ket{a} \mapsto \ket{(a+1) \pmod{n}}$
+\begin{solution}
+  \begin{mathpar}
+    \begin{array}{crcl}
+            & \ket{a} & \mapsto & \ket{b} \\
+\Rightarrow & IQFT(\ket{\hat{a}}) & \mapsto & IQFT(\ket{\hat{b}}) \\
+    \end{array}
+  \end{mathpar}
+
+So, we can use most of the circuitry from the first sub-question.
+
+\begin{center}
+  \begin{quantikz}%[slice all]
+    \lstick{\ket{a_1}}
+      & \gate{QFT}
+        \slice[label style={pos=1, anchor=north}]{\ket{\hat{a}_i}}
+      & \gate{R_1}
+        \slice[label style={pos=1, anchor=north}]{\ket{\hat{b}_i}}
+      & \gate{IQFT}
+      & \rstick{\ket{b_1}} \\
+    \lstick{\ket{a_2}}
+      & \gate{QFT}
+      & \gate{R_2}
+      & \gate{IQFT}
+      & \rstick{\ket{b_2}} \\
+    \vdots
+      & \vdots
+      & \vdots
+      & \vdots
+      & \vdots \\
+    \lstick{\ket{a_n}}
+      & \gate{QFT}
+      & \gate{R_n}
+      & \gate{IQFT}
+      & \rstick{\ket{b_n}}
+  \end{quantikz}
+\end{center}
+\end{solution}
+  \end{parts}
+\end{questions}
+
+\end{document}
+

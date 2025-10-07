@@ -1,0 +1,50 @@
+\documentclass[12pt]{article}
+
+\input{../config.tex}
+
+\begin{document}
+
+\title{Lecture 1: Classical reversible and randomized computation and matrices}
+\author{Lecturer: Jaikumar Radhakrishnan\\ Scribe: Julin Shaji}
+\date{June 10, 2025}
+\maketitle
+
+Controlled NOT (CNOT):
+
+\begin{quantikz}
+ \lstick{c} & \ctrl{1} &  \\
+ \lstick{x} & \targ{}  &  \\
+\end{quantikz}
+
+Controlled swap:
+
+\begin{quantikz}
+ \lstick{a} & \ctrl{1} &  \\
+ \lstick{b} & \swap{1}  &  \\
+ \lstick{c} & \targX{}  &  \\
+\end{quantikz}
+
+Toffoli gate
+\begin{itemize}
+\item a 'doubly controlled NOT':
+\end{itemize}
+
+\begin{quantikz}
+ \lstick{a} & \ctrl{1} & \rstick{a} \\
+ \lstick{b} & \ctrl{1} & \rstick{b} \\
+ \lstick{c} & \targ{}  & \rstick{c $\oplus$ ab} \\
+\end{quantikz}
+
+Saving value from a \$-gate:
+
+\begin{quantikz}
+ \lstick{c} & \ctrl{1} &  \\
+ \lstick{x} & \targ{}  &  \\
+\end{quantikz}
+
+\begin{itemize}
+\item DBT: Why call Hadamard gate \$-gate? 
+\end{itemize}
+
+\end{document}
+

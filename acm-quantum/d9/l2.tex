@@ -1,0 +1,360 @@
+\documentclass[12pt]{article}
+
+\input{../config.tex}
+% \usepackage{amssymb,amsmath,amsthm}
+% \usepackage{tikz-cd}
+% \usepackage{mathpartir}
+% % geometry (sets margin) and other useful packages
+% \usepackage[margin=1.25in]{geometry}
+% \usepackage{graphicx,ctable,booktabs}
+%
+% \usepackage[sort&compress,square,comma,authoryear]{natbib}
+% \bibliographystyle{plainnat}
+%
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{lemma}{Lemma}
+
+%
+%Fancy-header package to modify header/page numbering
+%
+% \usepackage{fancyhdr}
+% \pagestyle{fancy}
+% %\addtolength{\headwidth}{\marginparsep} %these change header-rule width
+% %\addtolength{\headwidth}{\marginparwidth}
+% \lhead{Problem \thesection}
+% \chead{}
+% \rhead{\thepage}
+% \lfoot{\small\scshape EECS 598: Category Theory}
+% \cfoot{}
+% \rfoot{\footnotesize PS 1}
+% \renewcommand{\headrulewidth}{.3pt}
+% \renewcommand{\footrulewidth}{.3pt}
+% \setlength\voffset{-0.25in}
+% \setlength\textheight{648pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\title{Lecture 2: Applications of entanglement}
+\author{Lecturer: Debajyoti Bera\\ Scribe: Julin Shaji}
+\date{June 18, 2025}
+\maketitle
+
+\section{Levels of quantum data}
+Apparently, there is no standard name for qudits with $d > 3$.
+\footnote{\url{https://quantumcomputing.stackexchange.com/questions/2100/do-any-specific-types-of-qudits-other-than-qubits-and-qutrits-have-a-name}}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Name   & Num of levels & Possible Values            \\
+\midrule
+Qubit  & 2             & $\{0, 1\}$                 \\
+Qutrit & 3             & $\{0, 1, 2\}$              \\
+Qudit  & d             & $\{0, 1, 2, \cdots, d-1\}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Conjugate coding}
+\begin{itemize}
+\item Standard basis is $\{\ket{0}, \ket{1}\}$
+\item DBT: Z-axis is called so because it corresponds to Pauli gates ??
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{ll}
+  \toprule
+  Basis             & Name   \\
+  \midrule
+$\ket{0}, \ket{1}$  & Z-axis \\
+$\ket{+}, \ket{-}$  & X-axis \\
+$\ket{i}, \ket{-i}$ & Y-axis \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{minipage}{0.5\linewidth}
+X axis:
+\begin{mathpar}
+\ket{+} = \frac{1}{\sqrt{2}}\left( \ket{0} + \ket{1} \right)\\
+\ket{-} = \frac{1}{\sqrt{2}}\left( \ket{0} - \ket{1} \right)
+\end{mathpar}
+\end{minipage}
+%
+\begin{minipage}{0.5\linewidth}
+Y axis:
+  \begin{mathpar}
+\ket{i} = \frac{1}{\sqrt{2}}\left( \ket{0} + i\ket{1} \right)\\
+\ket{-i} = \frac{1}{\sqrt{2}}\left( \ket{0} - i\ket{1} \right)
+  \end{mathpar}
+\end{minipage}
+
+Inner product of basis from different axes:
+DBT: How is this calc done?
+
+\begin{mathpar}
+  \begin{array}{rcl}
+|\braket{0}{-i}|^2 & = & \frac{1}{\sqrt{2}}^2 \\
+                   & = & \frac{1}{2}
+  \end{array}
+  \\
+  \begin{array}{rcl}
+|\braket{-}{i}|^2 & = & \frac{1}{\sqrt{2}}\left[ \ket{0} - \ket{1} \right] \frac{1}{\sqrt{2}}\left[ \ket{0} + i\ket{1} \right]\\
+                  & = & \frac{1}{2}
+  \end{array}
+  \\
+  \begin{array}{rcl}
+|\braket{0}{i}|^2 & = & \frac{1}{2} \\
+  \end{array}
+\end{mathpar}
+
+\begin{itemize}
+\item Bases with this property = mutually unbiased basis
+\item aka conjugate bases
+\end{itemize}
+
+Two bases:
+\begin{itemize}
+\item $\{ \ket{a_1}, \ket{a_2} \}$
+\item $\{ \ket{b_1}, \ket{b_2} \}$
+\end{itemize} are mutually unbiased if
+$|\braket{a_1}{b_1}|^2 = \frac{1}{2}$ and 
+$|\braket{a_2}{b_2}|^2 = \frac{1}{2}$
+
+ie,
+
+\begin{mathpar}
+\forall i j,
+|\braket{a_i}{b_j}|^2 = \frac{1}{2} 
+\end{mathpar}
+
+\begin{itemize}
+\item How large a set of conjugate basis can we come up with?
+\item DBT: A hard problem
+\item $M(d)$ = maximum number of conjugage axes when $d$ is the number of levels
+\item If $d=p^n$ for some prime number $p$ and integer $n$, $M(d)=d+1$
+\item d=2 $\Rightarrow$ M(2) = 3 (Z, X and Y axes)
+\item M(4) = 5
+\item Conjugate bases = $b_1$ and $b_2$
+\item DBT: If we have a state in basis $b_1$, the likelihood of getting
+  $b_2\ket{+}$ or $b_2\ket{-}$ is $\frac{1}{2}$ each
+\item $\Rightarrow$ maximum confusion ??
+\end{itemize}
+
+\section{Oblivious transfer}
+The problem:
+\begin{itemize}
+\item Alice has 2 bits: $m_0$, $m_1$
+\item Bob wants one of these bits
+\item But Bob doesn't want Alice to know which bit is it that he wants
+\item And Alice doesn't want Bob to know a bit other than what Bob wants
+\item ie, if Bob wants $m_b$ from Alice ($b \in \{0, 1\}$), Bob should
+  not be able to figure out $m_{1-b}$
+\end{itemize}
+
+Mutually unbiased bases can be used for this.
+\begin{itemize}
+\item Let bits with Alice be $m_x$ and $m_z$
+\item Alice will prepare an initial state = $\ket{\psi}$
+\item Alice randomly chooses a basis (or bit) $a$. $a \in_rand \{X, Y\}$
+\item Depending on the value of $a$, Alice sends either $m_x$ or $m_z$
+  to Bob such that
+  \begin{mathpar}
+    \ket{\psi} = 
+    \begin{cases}
+      \ket{+} & \text{if $a=x$, $m_x=0$} \\ 
+      \ket{-} & \text{if $a=x$, $m_x=1$} \\ 
+      \ket{0} & \text{if $a=z$, $m_x=0$} \\ 
+      \ket{1} & \text{if $a=z$, $m_x=1$} \\ 
+    \end{cases}
+  \end{mathpar}
+\end{itemize}
+
+Moving over to Bob's side:
+\begin{itemize}
+\item If Bob wants $m_x$, Bob will measure in X basis
+  \begin{mathpar}
+    \begin{cases}
+      0 & \text{measure $\ket{+}$} \\
+      1 & \text{measure $\ket{-}$} \\
+    \end{cases}
+  \end{mathpar}
+\item If Bob wants $m_z$, Bob will measure in Z basis
+  \begin{mathpar}
+    \begin{cases}
+      0 & \text{measure $\ket{0}$} \\
+      1 & \text{measure $\ket{1}$} \\
+    \end{cases}
+  \end{mathpar}
+\item Let $m_{\tilde{b}}$ be the bit that Bob gets
+\item Let $m_x=0$.
+  \begin{mathpar}
+    \begin{array}{rcl}
+      P(m_{\tilde{b}}=0) & = & P(\ket{\psi} = \ket{+}) \\
+                         & = & \frac{1}{2}*1 + \frac{1}{2}\frac{1}{2} \\
+                         & = & \frac{3}{4} \\
+                     
+    \end{array}
+  \end{mathpar}
+\item DBT: Sir also said something about the probability being
+  $\frac{1}{2}$. What was that?
+\item
+  Bob can get only one of $m_x$ or $m_z$ because only one bit is
+  sent. 
+\item
+  Due to the algorithm design, Bob is able to figure out the info
+  that he wants even if the bit that Alice sends is not the one that
+  he wanted.
+\item State for \ket{\psi} is carefully chosen for this.
+\end{itemize}
+
+Conclusion:
+\begin{itemize}
+\item This is a crude protocol because Bob cannot know with
+  probability 1 whether he got the right bit or not (due to the nature
+  of quantum algorithms)
+\item Usual way to get around this is to repeat the procedure multiple
+  times, but we can't do that here.
+\item DBT: Why can't we repeat?? Because measure $\Rightarrow$ state collapsed??
+\end{itemize}
+
+\section{BB84 QKD}
+\begin{itemize}
+\item The first QKD (Quantum Key Distribution) protocol
+\item For secret key transmission for use in symmetric key cryptography
+\item
+  Public key cryptography like RSA = computationally expensive when
+  compared to symmetric
+  \begin{itemize}
+  \item DBT: Even https uses public key cryptography to establish a secret
+    before shifting to symmetric key cryptography??
+  \end{itemize}
+\end{itemize}
+
+Aim:
+\begin{itemize}
+\item Send secret without an eavesdropper being able to intercept it successfully.
+\item
+  DBT: Maybe the secret needs to be transmitted over an insecure
+  channel ??
+\end{itemize}
+
+\subsection{Algorithm}
+Alice: 
+\begin{itemize}
+\item $i \in \{1 \cdots n\}$
+\item Pick $b_i \in_{rand} \{X, Z\}$ (ie, choose a basis)
+\item Pick $x_i \in_{rand} \{0, 1\}$ (message bit ??)
+\item Pick initial state $\ket{\psi}$ as earlier
+  \begin{mathpar}
+    \ket{\psi} = 
+    \begin{cases}
+      \ket{+} & \text{if $a=x$, $m_x=0$} \\ 
+      \ket{-} & \text{if $a=x$, $m_x=1$} \\ 
+      \ket{0} & \text{if $a=z$, $m_x=0$} \\ 
+      \ket{1} & \text{if $a=z$, $m_x=1$} \\ 
+    \end{cases} \\
+\ket{\psi} = \bigotimes\limits_{i=1}^{n} \ket{\psi_i}
+  \end{mathpar}
+\item This $\ket{\psi}$ is sent to Bob
+\end{itemize}
+
+Bob: 
+\begin{itemize}
+\item $i \in \{1 \cdots n\}$
+\item Pick $\tilde{b_i} \in_{rand} \{X, Z\}$ (ie, choose a basis)
+\item Measure $\ket{\psi_i}$ collapses to $\tilde{x_i}$
+\item $\tilde{x_i} = x_i$ with probability $\frac{1}{2}$
+\end{itemize}
+
+Complication-1:
+\begin{itemize}
+\item Entire $\tilde{x_i}$ cannot be the secret being sent
+\item Because it will reach Bob only with probability $\frac{1}{2}$
+\item Only half will arrive at Bob on an average
+\end{itemize}
+
+Solution:
+\begin{itemize}
+\item Alice and Bob publicly announce their chosen bases:
+  $(b_1, b_2, \cdots)$ and $(\tilde{b_1}, \tilde{b_2}, \cdots)$
+\item Drop $x_i$ where $b_i \neq \tilde{b_i}$
+\item DBT: How does this make sense ??
+\item Because if $b_i = \tilde{b_i}$ Bob will get the message anyway
+\item Roughly $\frac{n}{2}$ bits left intact
+\item This can become the secret being sent
+\item Secret: $x=\tilde{x}$
+  \begin{itemize}
+  \item Alice: $x$
+  \item Bob: $\tilde{x}$
+  \end{itemize}
+\end{itemize}
+
+Preventing eavesdropping (by Eve):
+\begin{itemize}
+\item DBT: If Eve measures the info being sent by Alice before Bob does,
+  the state would get disturbed and Bob can detect it ??
+\item ie, eavesdropping by an adversary causes errors in the leftover
+  $x = \tilde{x}$
+\end{itemize}
+
+Solution:
+\begin{itemize}
+\item QBER is done publicly
+\item BER: Bit Error Rate
+\item Quantum version is QBER: Quantum BER
+\item Alice publicly announce a subset of the leftover $x$
+  \begin{itemize}
+  \item DBT: Only Alice announces?
+  \item DBT: And is it just bit position or bit value as well?
+  \end{itemize}
+\item Both Alice and Bob publicly calculate QBER on these bits
+\item Error free $\Rightarrow$ QBER = 0 
+  \begin{itemize}
+  \item QBER = 0 is the ideal situation
+  \item Real life $\Rightarrow$ there always will be error
+  \item Efforts are being made to have good bit-rate of data
+    transmission while keeping error rate low enough
+  \item Eg: IITD-DRDO announced being able to do QKD
+    \footnote{\url{https://www.thehindu.com/sci-tech/science/drdo-and-iit-delhi-demonstrate-free-space-quantum-secure-communication-over-1-km-distance/article69701174.ece}}
+    \begin{itemize}
+    \item 1 km secure communication
+    \item Free space (has some advantage over other techniques)
+    \item QBER < 7\%
+    \item Bitrate: 240 bps 
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+There is more:
+\begin{itemize}
+\item Error correction
+\item DBT: Privacy amplification
+\item DBT: Can't Eve impersonate Bob to Alice? At the very beginning? 
+\end{itemize}
+
+About RSA:
+\begin{itemize}
+\item RSA $\Rightarrow$ assumption is that factoring is a hard problem
+\item But this is not yet proven
+\item Anyway, quantum computer capable of Shor's algorithm renders RSA moot
+\item So we need algorithms like this
+\end{itemize}
+
+\section{Trivia}
+\begin{itemize}
+\item
+  DBT:
+  Research on quantum secure communication predates major interest in
+  quantum computing algorithms ??
+\item Quantum money
+\item One time pad:
+  \begin{itemize}
+  \item Random number chosen shared between both parties = secret
+  \item ciphertext = message xor secret
+  \item message = ciphertext xor secret
+  \end{itemize}
+\end{itemize}
+
+\end{document}

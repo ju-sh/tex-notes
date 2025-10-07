@@ -1,0 +1,287 @@
+\documentclass[12pt]{exam}
+
+\input{../config.tex}
+
+\title{Problem solving session 4}
+\author{\tiny{JS}}
+\date{18 June 2025}
+
+\begin{document}
+
+\maketitle
+\printanswers
+
+  Consider the following measurement operator acting on a single qubit
+  $\ket{\psi}$.
+  
+\begin{center}
+  \begin{quantikz}
+    \lstick{\ket{\psi}}
+    & \meter{X_B}
+    & 
+  \end{quantikz}
+\end{center}
+
+
+\begin{mathpar}
+X_B(\ket{\psi}) =
+  \begin{cases}
+  \ket{0} & \text{nothing happens} \\ 
+  \ket{1} & \text{bomb explodes}
+  \end{cases}
+\end{mathpar}
+
+In general,
+
+\begin{center}
+  \begin{quantikz}
+    \lstick{$\alpha$\ket{0} + $\beta$\ket{1}}
+    & \meter{X_B}
+    & 
+  \end{quantikz}%
+\end{center}
+
+\begin{mathpar}
+X_B(\alpha\ket{0} + \beta\ket{1}) =
+  \begin{cases}
+  \ket{0} & \text{nothing happens with probability } |\alpha|^2\\ 
+  \ket{1} & \text{bomb explodes with probability } |\beta|^2
+  \end{cases}
+\end{mathpar}
+
+It is guaranteed that $\ket{\psi}$ is either $\ket{0}$ or $\ket{1}$.
+
+Your goal is to identify if (without dying from a bomb explosion):
+\begin{itemize}
+\item $\ket{\psi} = 0$ (not bomb)
+\item $\ket{\psi} = 1$ (bomb)
+\end{itemize}
+
+\begin{questions}
+
+\question
+  What happens when you measure $\ket{\psi}$ using $X_B$?
+  
+  \begin{solution}
+    
+  \end{solution}
+
+\question
+  Consider the following circuit.
+
+\begin{center}
+  \begin{quantikz}
+    \lstick{\ket{0}}
+      \slice[label style={pos=1, anchor=north}]{1}
+    & \gate{H}
+      \slice[label style={pos=1, anchor=north}]{2}
+    & \ctrl{1}
+      \slice[label style={pos=1, anchor=north}]{3}
+    &  
+      \slice[label style={pos=1, anchor=north}]{4}
+    & \meter{} \\
+    \lstick{\ket{\psi}}
+    & 
+    & \gate{X}
+    & \meter{X_B}
+    &  
+  \end{quantikz}%
+\end{center}
+
+  Write down the states at 1,2,3,4
+
+  \begin{solution}
+States would be:
+\begin{itemize}
+\item 1: $\ket{0}\ket{\psi}$
+\item 2: Hadamard on qubit-1
+  \begin{align*}
+H\ket{0}\ket{\psi}
+  &=
+  \frac{1}{\sqrt{2}}(\ket{0} + \ket{1})\ket{\psi} \\
+  &=
+  \frac{1}{\sqrt{2}}(\ket{0\psi} + \ket{1\psi}) \\
+  \end{align*}
+\item 3: Apply controlled NOT gate
+  \begin{align*}
+\frac{1}{\sqrt{2}}(\ket{0\psi} + \ket{1\psi})
+  &\Rightarrow
+  \frac{1}{\sqrt{2}}(\ket{0\psi} + \ket{1\bar{\psi}}) \\
+  \end{align*}
+\item 4:
+  Measure qubit-2. It will collapse to a particular state.
+  $0$ or $1$ with $1/2$ probability 
+  
+  \begin{itemize}
+  \item If $\ket{\psi} = \ket{0}$,
+    \begin{align*}
+ & \frac{1}{\sqrt{2}}(\ket{0\psi} + \ket{1\bar{\psi}}) \\
+ &= \frac{1}{\sqrt{2}}(\ket{00} + \ket{11}) \\
+    \end{align*}
+    %
+    \begin{itemize}
+    \item Collapse to 0 $\Rightarrow \ket{00}$ 
+    \item Collapse to 1 $\Rightarrow \ket{11}$ 
+    \end{itemize}
+  \item If $\ket{\psi} = \ket{1}$,
+    \begin{align*}
+ & \frac{1}{\sqrt{2}}(\ket{0\psi} + \ket{1\bar{\psi}}) \\
+ &= \frac{1}{\sqrt{2}}(\ket{01} + \ket{10}) \\
+    \end{align*}
+    %
+    \begin{itemize}
+    \item Collapse to 0 $\Rightarrow \ket{10}$ 
+    \item Collapse to 1 $\Rightarrow \ket{01}$ 
+    \end{itemize}
+  \end{itemize}
+  
+\item 5:
+  Measure qubit-1. Qubit-2 has already collapsed.
+  Qubit-1 is entangled $\Rightarrow$ Qubit-1 too can be found.
+  
+  \begin{center}
+    \begin{tabular}{ccl}
+      \toprule
+      State & Qubit-1 & Path \\
+      \midrule
+      $\ket{00}$ & 0 & $\ket{\psi} = \ket{0} \text{then } q_2 \mapsto 0$ \\
+      $\ket{11}$ & 1 & $\ket{\psi} = \ket{0} \text{then } q_2 \mapsto 1$ \\
+      $\ket{10}$ & 1 & $\ket{\psi} = \ket{1} \text{then } q_2 \mapsto 0$ \\
+      $\ket{01}$ & 0 & $\ket{\psi} = \ket{1} \text{then } q_2 \mapsto 1$ \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+
+ %  \begin{itemize}
+ %  \item If $\ket{\psi} = \ket{0}$,
+ %    \begin{align*}
+ % & \frac{1}{\sqrt{2}}(\ket{00} + \ket{11}) \\
+ % &=  \\
+ %    \end{align*}
+ %  \item If $\ket{\psi} = \ket{1}$,
+ %    \begin{align*}
+ % & \frac{1}{\sqrt{2}}(\ket{0\psi} + \ket{1\bar{\psi}}) \\
+ % &=  \\
+ %    \end{align*}
+ %  \end{itemize}
+\end{itemize}
+  \end{solution}
+  
+\question
+We have an algorithm $A$:
+
+\begin{enumerate}
+\item Perform the operations in the above circuit
+\item If the bomb explodes, then there is no output (person operating
+  the circuit died..)
+\item If it did not explode and the first register is:
+  \begin{itemize}
+  \item $\ket{0}$ then output ``No bomb''
+  \item $\ket{1}$ then output ``Bomb''
+  \end{itemize}
+\end{enumerate}
+
+Calculate the following probabilities.
+
+\begin{parts}
+\part
+  Suppose $\ket{\psi} = \ket{1}$ (ie, ``Bomb'' output), compute
+  Pr(Algorithm A outputs ``No bomb'').
+
+\begin{solution}
+  \begin{mathpar}
+    \begin{array}{crcl}
+            & \ket{\psi} & = & \ket{1} \\
+\Rightarrow & \ket{\psi} & = & \frac{1}{\sqrt{2}}(\ket{01} - \ket{10})
+      \text{(From step 3)}\\
+    \end{array}
+  \end{mathpar}
+  
+Measure with $X_B$.
+\begin{itemize}
+\item Bomb explode with probability $\frac{1}{2}$
+  \begin{itemize}
+  \item $\Rightarrow$ No output at all
+  \item q2 collapses to $\ket{0}$
+  \item Therefore, $\ket{\psi} = \ket{01}$
+  \end{itemize}
+\item No explosion with probability $\frac{1}{2}$
+  \begin{itemize}
+  \item An output still possible
+  \item q2 collapses to $\ket{1}$
+  \item Therefore, $\ket{\psi} = \ket{10}$
+  \item $\Rightarrow$ output is ``Bomb''
+  \end{itemize}
+\end{itemize}
+
+So, Pr(``No bomb'') = 0
+\end{solution}
+
+\part
+  Suppose $\ket{\psi} = \ket{0}$ (ie, ``No bomb'' output), compute
+  Pr(Algorithm A outputs ``Bomb'').
+
+\begin{solution}
+  \begin{mathpar}
+    \begin{array}{crcl}
+            & \ket{\psi} & = & \ket{0} \\
+\Rightarrow & \ket{\psi} & = & \frac{1}{\sqrt{2}}(\ket{00} + \ket{11})
+      \text{(From step 3)}\\
+    \end{array}
+  \end{mathpar}
+
+Measure with $X_B$.
+\begin{itemize}
+\item Bomb explode with probability $\frac{1}{2}$
+  \begin{itemize}
+  \item $\Rightarrow$ No output at all
+  \item q2 collapses to $\ket{1}$
+  \item Therefore, $\ket{\psi} = \ket{11}$
+  \end{itemize}
+\item No explosion with probability $\frac{1}{2}$
+  \begin{itemize}
+  \item An output still possible
+  \item q2 collapses to $\ket{0}$
+  \item Therefore, $\ket{\psi} = \ket{00}$
+  \item $\Rightarrow$ output is ``No Bomb''
+  \end{itemize}
+\end{itemize}
+
+So, Pr(``Bomb'') = 0
+
+\end{solution}
+
+\part
+  \st{The error probability of algorithm $A$ is the maximum of the
+  probabilities computed in part (a) and part (b).}
+  Find maximum of the above two probabilities.
+
+\begin{solution}
+  \begin{mathpar}
+max(0, 0) = 0 
+  \end{mathpar}
+\end{solution}
+
+\part
+  The probability of explosion for algorithm $A$ is the maximum of
+  probabilities of explosion when $\ket{\psi} = \ket{0}$ and 
+  $\ket{\psi} = \ket{1}$.
+  Compute the maximum probability of explosion for $A$.
+  
+\begin{solution}
+  \begin{itemize}
+  \item Pr(``Bomb when $\ket{\psi}=\ket{0}$) = $0$
+  \item Pr(``Bomb when $\ket{\psi}=\ket{1}$) = $\frac{1}{2}$
+  \end{itemize}
+  
+Therefore:
+\begin{mathpar}
+  max(0, \frac{1}{2}) = \frac{1}{2} 
+\end{mathpar}
+\end{solution}
+
+\end{parts}
+\end{questions}
+
+\end{document}
+

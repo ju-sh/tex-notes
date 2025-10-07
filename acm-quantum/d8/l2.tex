@@ -1,0 +1,128 @@
+\documentclass[12pt]{article}
+
+\input{../config.tex}
+
+\begin{document}
+
+\title{Lecture 2: Shor's algorithm}
+\author{Lecturer: Dinesh Krishnamurthi\\ Scribe: Julin Shaji}
+\date{June 17, 2025}
+\maketitle
+
+% \begin{center}
+%   \begin{quantikz}
+% \ket{x}   & \qwbundle{n} & \gate[2]{U_f} & \qwbundle{n} & \ket{x} \\
+% \ket{0^n} & \qwbundle{m} &               & \qwbundle{m} & \ket{f(x)} \\
+%   \end{quantikz}
+% \end{center}
+
+\url{https://people.eecs.berkeley.edu/~vazirani/f04quantum/notes/lec9.pdf}
+
+\begin{itemize}
+\item Finds prime factors of a number
+\item Quantum algorithm by Peter Shor in 1994~\cite{shor1994algorithms}
+\item Made possible via this path
+  \begin{enumerate}
+  \item Order finding problem
+  \item 'Square-root finding problem'
+  \item Factorization problem in \emph{polynomial time} with
+    \emph{bounded error probability}
+  \end{enumerate}
+\item
+Problem Statement:
+
+Given an integer $M$, find prime number $p_i$ such that
+\begin{mathpar}
+  M = p_1^{e_1} + p_2^{e_2} + \cdots + p_k^{e_k}
+\end{mathpar}
+\end{itemize}
+
+For simplicity, let us change the problem statement a bit and make the
+following assumptions (without loss of generality):
+\begin{itemize}
+\item $M = pq$ where $p$ and $q$ are primes
+\item It is sufficient to split $M$ into two numbers $a$ and $b$. We
+  can repeat the algorithm recursively to find the factors in $log M$ time
+\end{itemize}
+
+\begin{itemize}
+\item Classic prime factorization problems $\Rightarrow O(\sqrt{M})$
+  (DBT: Which one is that? Sieve of Eratosthenes??)
+\end{itemize}
+
+\section{'Square root finding' problem}
+Problem:
+\begin{itemize}
+\item Given:
+  \begin{itemize}
+  \item a composite number $N$
+  \item $x$ such that $x$ is a non-trivial square root of $1$, $\bmod{N}$
+  \end{itemize}
+\item Wanted: Non-trivial factors of $N$
+\item 
+  Conditions to satisfy:
+  \begin{itemize}
+  \item $t^2 \equiv 1 \bmod{N}$
+  \item $t \not\equiv 1 \bmod{N}$
+  \item $t \not\equiv (-1) \bmod{N}$
+  \end{itemize}
+\end{itemize}
+
+\begin{mathpar}
+  \begin{array}{crcl}
+            & t^2        & \equiv & 1 \bmod{N} \\
+\Rightarrow & t^2-1      & \equiv & 0 \bmod{N} \\
+\Rightarrow & (t+1)(t-1) & \equiv & 0 \bmod{N} \\
+  \end{array}
+\end{mathpar}
+
+Since:
+
+\begin{itemize}
+  \item $t \not\equiv 1 \bmod{N}$
+  \item $t \not\equiv (-1) \bmod{N}$
+\end{itemize}
+
+we can tell that:
+
+\begin{itemize}
+\item $1 < t < N-1$
+\end{itemize}
+
+Also, we know that
+
+\begin{itemize}
+\item $gcd(t+1, N)$ is a non-trivial factor of $N$
+\item $gcd(t-1, N)$ is a non-trivial factor of $N$
+\end{itemize}
+
+Use Euclid's algorithm to find gcd and we get two non-trivial factors
+of $N$.
+
+\section{Order finding lemma}
+
+Lemma description:
+\begin{itemize}
+\item Given
+  \begin{itemize}
+  \item $p$ is an odd prime
+  \item $x$ is a uniformly distributed random variable
+  \item $0 \le x < p$
+  \end{itemize}
+\item Then, ord(x) is even with probability half.
+\end{itemize}
+
+\section{Order finding algorithm}
+
+\begin{itemize}
+\item 
+  In the last lecture, we saw a quantum algorithm to find the period of
+  a given periodic function.
+\item 
+  The same technique can be used to find the order of an element $a$
+  in a group $G$ = $ord_G(a)$
+\end{itemize}
+
+
+
+\end{document}

@@ -1,0 +1,194 @@
+#+TITLE: Quantum computing systems: A software, architecture, and systems perspective
+* D1
+
+
+
+
+
+
+
+Computing stack:
+ 1) app
+ 2) algo
+ 3) prog: high-level description
+ 4) isa: sw-hw interface
+ 5) μ-arch: dependent on hw
+ 6) circuits
+ 7) electronics
+    
+    
+How programs are converted to circuits
+
+Tech for builiding qc circuits
+ - trapped ions
+ - superconducting qubits
+ - Quantum dot
+
+QC computers
+ - very delicate
+ - accessed via cloud
+ - output: a distribution
+ - has classical control circuits ??
+   
+Qubits
+ - inherently noisy
+ - /decoherence/
+   + Could be a few microseconds 
+   + kind of like DRAM needing refreshing
+ - imperfect quantum gates
+ - lot of qc work = dealing with errors
+ - quantum error correction: QEC
+   + Increase fault tolerance
+   + Disadvantage: expensive
+   + Logical qubit vs
+     
+Present day QC systems
+ - NISQ
+ - Too small for QEC practically 
+   
+NISQ
+ - This is the present and near-future scenario
+ - error mitigation
+ - increase P of correct answer by repeatedly running the program
+   
+Fault-tolerant computing
+ - parity bits
+ - decoder first check whether there is error
+ - correct it if possible
+ - corrects errors in real-time
+   
+Quantum compiler 
+ - generate executable to run a quantum program
+ - higher quantum assembly language
+ - lower level assembly
+ - generates pulses controlling qubits
+ - pulse duration, freq, etc 
+ - quantum compilers: transofmr HLL programs to control pulses for qubits 
+ - qubit allocation: allocatin of program qubits to physical qubits
+   + Similar to reg allocation
+   + Not all phsical quibts may be connected
+   + Qubit routing: itroduce swaps to get around this problem
+     * Similar to register renaming in classical compilers
+ - Gate nativisation
+   + Map higher level gates to native gates
+   + Eg: H could be RZ RZ RZ
+   + Dependent on the avialble resource natively
+   + Basis gates aka native gates
+ - Toffeli gates are hard to implment in hardware?
+   + because it's multi-qubit 
+ - Pulse scheduling
+   + native operation to control pulse 
+ - cancel gates ??
+ - 
+
+NISQ:
+ - circuit cutting /knitting   
+   * Cut large desing into smaller. So that error becomes smaller?
+
+Qubit mapping
+ - resonators: way to connect two qubits
+ - more connectivity means more errors. crosstalk
+
+Qubit routing
+ - minimize number of swaps needed
+   + CNOT gates
+ - ∵ swaps increase circuit depth
+   
+   
+Dbts:
+ - Are swap always possible because of multiple connections needed. If
+   swap not possible due to hardware constraints, what can be done?
+   + possible. need multiple swaps
+     
+     
+     
+   
+   
+   
+   
+   
+   
+   
+
+   
+   
+
+   
+
+   
+   
+   
+   
+
+
+What is the state of real hardware for quantum computing in the present day?
+You mentioned it is NISQ in present day.
+Are there any that us students can access? 
+In a way that will make us feel the difference between a simulation
+and running on real hardware?
+
+Why are Toffoli gates are hard to implement in hardware?
+
+Are there quantum FPGAs? Or are these the normal FPGAs?
+It was mentioned that pulse schedule generated is loaded on to fpgas. 
+
+Cancel gates
+* D2
+ - There is a gap between error correction rates available in hw and what qc apps require
+   + => quantum error correction (QEC) 
+ - parity bits => syndrome
+   + Syndrome extraction
+   + Decoding finding if error occurred
+   + Correcting is way harder
+ - set bits in syndrome = number of set bits in decoding graph
+ - How about correcting phase?   
+   + Needs for qubits to encode error correction/detection info
+   + A soln: surface codes
+     * A promising ECC candidate
+ - decoder checks for errors (and corrects if possible)
+   + Periodically check for errors
+ - QEC: fix a redundancy level suited for application required error rate
+   + App error rate depends on the number of operations or circuit depth
+   + Also depends on hardware
+ - Stabilizer => error checks
+   + Done by stabilizer circuits
+ - X-decoding graph, Z-decoding graph
+ - Errors can creep into syndrome extraction as well
+   + Decoder needs to handle this too
+   + Eg:
+     * double error with 1b parity 
+     * error while doing measurement
+ - Real-time decoding
+   + Error correction should be done with low latency
+   + To prevent accumulation of errors
+   + latency allowed depends on qubit technology
+     * Eg: trapped ion => longer latency possible
+ - qubits are inside a /dilution refrigerator/
+ - Distance 5 surface code (by google ??)
+   + The 5 indicates a gap between desired and available ??
+   + Distance 3 => error chain of length 1 correctable
+   + Distance is for the code
+ - MWPM: Min Width Perfect Matching
+   + A graph problem
+     
+ - software decoder = slow
+   + Soln: replace with LUTs loaded on FPGAs
+   + Problem: LUT size grows exponentially: 2^n where n is number of bits
+     * Quickly exceed memory capacity of even state of art FPGAs
+   + Soln: not all error events are equally likely
+     * Some almost never happen
+     * Some: are uncorrectable. why bother storing them. remove from LUTs
+   + LUTs information is quite sparse
+     * Store in compressed form
+     * Compressed LUTs = CLUTs
+ - Quantum error correction. A company called riverlane is trying make sth in hw ??
+       
+       
+DBT:
+ - What are CLUTs, just a construct that is used or something native to hw?
+ - software decoder = slow
+   + Soln: replace with LUTs loaded on FPGAs
+ - Are there quantum FPGAs? Or are these the normal FPGAs?
+   + It was mentioned that pulse schedule generated is loaded on to fpgas. 
+ - If normal FPGA, is going from refrigerated to non-refrigerated no problem?
+ - normal hw = asic, fpga. configurable qc ckts?

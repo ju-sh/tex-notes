@@ -1,0 +1,227 @@
+\documentclass[12pt]{exam}
+
+\input{../config.tex}
+
+\title{Problem solving session 5}
+\author{\tiny{JS}}
+\date{19 June 2025}
+
+\begin{document}
+
+\maketitle
+\printanswers
+
+\begin{questions}
+  \question
+  Recall the Fredkin gate (Controlled swap gate).
+  
+  \begin{mathpar}
+    F(\ket{0}\ket{ab}) = \ket{0}\ket{??} \\ 
+    F(\ket{1}\ket{ab}) = \ket{1}\ket{??} \\ 
+  \end{mathpar}
+  
+  \begin{solution}
+  Fredkin gate swaps 2nd and 3rd qubits if the 1st qubit is 1.
+
+  \begin{mathpar}
+    F(\ket{0}\ket{ab}) = \ket{0}\ket{ab} \\ 
+    F(\ket{1}\ket{ab}) = \ket{1}\ket{ba} \\ 
+  \end{mathpar}
+  \end{solution}
+  
+  \question
+  Suppose you are give two 1-qubit states $\ket{\psi_1}$ and
+  $\ket{\psi_2}$ via unitaries $U_1$ and $U_2$.
+  
+  The goal is to test if the states $\ket{\psi_1}$ and $\ket{\psi_2}$
+  are same or different.
+  
+  Consider the following circuit (called \emph{swap test}):
+
+\begin{center}
+  \begin{quantikz}
+    \lstick{\ket{0}}
+    & \slice[label style={pos=1, anchor=north}]{1}
+    & \gate{H}
+      \slice[label style={pos=1, anchor=north}]{2}
+    &  
+    & \ctrl{1}
+      \gategroup[%
+        3,
+        steps=1,
+        style={
+          dashed,
+          rounded corners,
+          fill=blue!20,
+          inner xsep=2pt
+        },
+        background,
+        label style={
+          label position=above,
+          anchor=north,
+          yshift=0.5cm
+        }
+      ]{{\small Fredkin}}
+    & \slice[label style={pos=1, anchor=north}]{3}
+    & \gate{H}
+      \slice[label style={pos=1, anchor=north}]{4}
+    & \meter{}
+      \slice[label style={pos=1, anchor=north}]{5}
+    & \\
+    \lstick{\ket{\psi_1}}
+    & \qwbundle{1} 
+    &  
+    &  
+    & \swap{1}
+    &
+    &
+    &
+    & \\
+    \lstick{\ket{\psi_2}}
+    & \qwbundle{1} 
+    &
+    &  
+    & \targX{}
+    &
+    &
+    &
+    &
+  \end{quantikz}%
+\end{center}
+
+Write down the states at 1, 2, 3, 4 and 5.
+
+\begin{solution}
+  \begin{itemize}
+\item 1: $\ket{0 \psi_1 \psi_2}$
+\item 2: Hadamard on qubit-1
+  \begin{align*}
+H\ket{0} \otimes \ket{\psi_1 \psi_2}
+  &=
+  \ket{+} \otimes \ket{\psi_1 \psi_2} \\
+  &=
+  \frac{1}{\sqrt{2}}\left( \ket{0} + \ket{1} \right) \ket{\psi_1 \psi_2} \\
+  &=
+  \frac{1}{\sqrt{2}}\left( \ket{0\psi_1 \psi_2} + \ket{1\psi_1 \psi_2} \right) \\
+  \end{align*}
+\item 3: CSWAP on qubits 2 and 3, controlled by qubit-1
+  \begin{align*}
+\frac{1}{\sqrt{2}}\left( \ket{0\psi_1 \psi_2} + \ket{1\psi_1 \psi_2} \right)
+  &\Rightarrow
+\frac{1}{\sqrt{2}}\left( \ket{0\psi_1 \psi_2} + \ket{1\psi_2 \psi_1} \right)
+  \end{align*}
+\item 4: Hadamard on qubit-1 (again)
+  \begin{align*}
+\frac{1}{\sqrt{2}}\left( \ket{0\psi_1 \psi_2} + \ket{1\psi_2 \psi_1} \right)
+    &=
+\frac{1}{\sqrt{2}}
+  \left(
+      H\ket{0}\ket{\psi_1 \psi_2}
+      +
+      H\ket{1}\ket{\psi_2 \psi_1}
+  \right) \\
+    &=
+\frac{1}{\sqrt{2}}
+  \left(
+      \ket{+}\ket{\psi_1 \psi_2}
+      +
+      \ket{-}\ket{\psi_2 \psi_1}
+  \right) \\
+    &=
+\frac{1}{2}
+  \left(
+      (\ket{0}+\ket{1})\ket{\psi_1 \psi_2}
+      +
+      (\ket{0}-\ket{1})\ket{\psi_2 \psi_1}
+  \right) \\
+    &=
+\frac{1}{2}
+  \left(
+        \ket{0\psi_1 \psi_2}
+      + \ket{1\psi_1 \psi_2}
+      + \ket{0\psi_2 \psi_1}
+      - \ket{1\psi_2 \psi_1}
+  \right) \\
+    &=
+\frac{1}{2}\ket{0}
+  \left(
+    \ket{\psi_1 \psi_2} + \ket{\psi_2 \psi_1}
+  \right)
++
+\frac{1}{2}\ket{1}
+  \left(
+    \ket{\psi_1 \psi_2} + \ket{\psi_2 \psi_1}
+  \right)
+  \end{align*}
+\item 5: Measure qubit-1 (the first register) $\Rightarrow$
+  qubit-1 collapses to $\ket{0}$ or $\ket{1}$.
+  \end{itemize}
+\end{solution}
+
+  \question
+Compute the probability of seeing $\ket{1}$ after the measurement in
+register 1.
+
+(Hint: It is a function of $|\braket{\psi_2}{\psi_1}|$.)
+
+\begin{solution}
+  
+\end{solution}
+
+  \question
+  Let $D_1$ and $D_2$ be two 1-qubit operators defined as follows:
+  
+  \begin{mathpar}
+    \begin{array}{rcl}
+D_1\ket{0} & = & \sqrt{p_0}\ket{0} + \sqrt{1-p_0}\ket{1} \\
+D_1\ket{1} & = & \sqrt{p_1}\ket{0} + \sqrt{1-p_1}\ket{1} \\
+    \end{array}
+  \end{mathpar}
+  
+and
+  
+  \begin{mathpar}
+    \begin{array}{rcl}
+D_2\ket{0} & = & \sqrt{q_0}\ket{0} + \sqrt{1-q_0}\ket{1} \\
+D_2\ket{1} & = & \sqrt{q_1}\ket{0} + \sqrt{1-q_1}\ket{1} \\
+    \end{array}
+  \end{mathpar}
+  
+Note that:
+\begin{itemize}
+\item $D_1$ encodes a distribution $0 \mapsto p_0$ and $1 \mapsto p_1$
+\item $D_2$ encodes a distribution $0 \mapsto q_0$ and $1 \mapsto q_1$
+\end{itemize}
+
+\begin{parts}
+  \part
+Suppose that you are given two states
+
+\begin{mathpar}
+  \begin{array}{rcl}
+  \ket{\psi_1} & = & \frac{D_1\ket{0} + D_1\ket{1}}{\sqrt{2}} \\
+  \ket{\psi_2} & = & \frac{D_2\ket{0} + D_2\ket{1}}{\sqrt{2}}
+  \end{array}
+\end{mathpar}
+
+Use the previous two questions to distinguish the two distributions
+$D_1$ and $D_2$.
+
+\begin{solution}
+  
+\end{solution}
+
+  \part
+Now suppose that you are just given the operations $D_1$ and $D_2$ and
+not the states $\ket{\psi_1}$ and $\ket{\psi_2}$.\\
+How can you distinguish the two distributions in this case?
+
+\begin{solution}
+  
+\end{solution}
+\end{parts}
+
+\end{questions}
+
+\end{document}
+

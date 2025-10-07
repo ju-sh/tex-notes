@@ -1,0 +1,200 @@
+\documentclass[12pt]{article}
+
+\input{../config.tex}
+
+\begin{document}
+
+\title{Lecture 3: The Walsh-Hadamard transform, Deutsch algorithm and the Deutsch-Josza problem}
+\author{Lecturer: Dinesh Krishnamoorthy\\ Scribe: Julin Shaji}
+\date{June 11, 2025}
+\maketitle
+
+\section{Quiz 5 discussion}
+What's the output state of this gate?
+
+\begin{center}
+\begin{circuitikz} 
+  \tikzset{%
+    mux33/.style={
+      muxdemux,
+      muxdemux def={Lh=5, Rh=5, NL=3, NR=3, NB=0},%
+      % muxdemux label={%
+      %     L1=$\ket{x}$, L2=$\ket{y}$, L3=$\ket{0}$,
+      %     R1=$\ket{x}$, R2=$\ket{y}$, R3=},
+    }%
+  }
+  \node[mux33] (G) {T};
+  \draw (G.lpin 1) ++(-0.2, 0) node[xshift=-2mm] {$\ket{x}$};
+  \draw (G.lpin 2) ++(-0.2, 0) node[xshift=-2mm] {$\ket{y}$};
+  \draw (G.lpin 3) ++(-0.2, 0) node[xshift=-2mm] {$\ket{-}$};
+
+  \draw (G.rpin 1) ++(0.2, 0) node[xshift=2mm] {?};
+  \draw (G.rpin 2) ++(0.2, 0) node[xshift=2mm] {?};
+  \draw (G.rpin 3) ++(0.2, 0) node[xshift=2mm] {?};
+\end{circuitikz} 
+\end{center}
+
+\begin{mathpar}
+  \ket{-} = H\ket{1} = \frac{1}{\sqrt{2}}\ket{0} - \frac{1}{\sqrt{2}}\ket{1}
+\end{mathpar}
+
+Toffoli gate is like:
+
+\begin{center}
+\begin{circuitikz} 
+  \tikzset{%
+    mux33/.style={
+      muxdemux,
+      muxdemux def={Lh=5, Rh=5, NL=3, NR=3, NB=0},%
+    }
+  }
+  \node[mux33] (G) {T};
+  \draw (G.lpin 1) ++(-0.2, 0) node[xshift=-2mm] {x};
+  \draw (G.lpin 2) ++(-0.2, 0) node[xshift=-2mm] {y};
+  \draw (G.lpin 3) ++(-0.2, 0) node[xshift=-2mm] {z};
+
+  \draw (G.rpin 1) ++(0.2, 0) node[xshift=2mm] {x};
+  \draw (G.rpin 2) ++(0.2, 0) node[xshift=2mm] {y};
+  \draw (G.rpin 3) ++(0.2, 0) node[xshift=6.5mm] {z $\oplus$ xy};
+\end{circuitikz} 
+\end{center}
+
+So,
+
+\begin{mathpar}
+  \begin{array}{cl}
+  & T(\ket{xy}\ket{-}) \\
+= & \ket{xy} T(\ket{-}) \\
+= & \ket{xy}\left(\ket{-} \oplus xy \right)  \\
+= & \ket{xy}\left( \frac{1}{\sqrt{2}}\ket{0 \oplus xy} - \frac{1}{\sqrt{2}}\ket{1 \oplus xy}\right) \\
+  \end{array}
+  
+  \begin{array}{cl}
+  & T(\ket{00}\ket{-}) \\
+= & \ket{00}\left( \frac{1}{\sqrt{2}}\ket{0 \oplus 0.0} - \frac{1}{\sqrt{2}}\ket{1 \oplus 0.0}\right) \\
+= & \ket{00}\left( \frac{1}{\sqrt{2}}\ket{0} - \frac{1}{\sqrt{2}}\ket{1}\right) \\
+= & \ket{00}\ket{-} \\
+  \end{array}
+  
+  \begin{array}{cl}
+  & T(\ket{01}\ket{-}) \\
+= & \ket{01}\left( \frac{1}{\sqrt{2}}\ket{0 \oplus 0.1} - \frac{1}{\sqrt{2}}\ket{1 \oplus 0.1}\right) \\
+= & \ket{01}\left( \frac{1}{\sqrt{2}}\ket{0} - \frac{1}{\sqrt{2}}\ket{1}\right) \\
+= & \ket{00}\ket{-} \\
+  \end{array}
+  
+  \begin{array}{cl}
+  & T(\ket{10}\ket{-}) \\
+= & \ket{10}\left( \frac{1}{\sqrt{2}}\ket{0 \oplus 1.0} - \frac{1}{\sqrt{2}}\ket{1 \oplus 1.0}\right) \\
+= & \ket{10}\left( \frac{1}{\sqrt{2}}\ket{0} - \frac{1}{\sqrt{2}}\ket{1}\right) \\
+= & \ket{00}\ket{-} \\
+  \end{array}
+  
+  \begin{array}{cl}
+  & T(\ket{11}\ket{-}) \\
+= & \ket{11}\left( \frac{1}{\sqrt{2}}\ket{0 \oplus 1.1} - \frac{1}{\sqrt{2}}\ket{1 \oplus 1.1}\right) \\
+= & \ket{11}\left( \frac{1}{\sqrt{2}}\ket{1} - \frac{1}{\sqrt{2}}\ket{0}\right) \\
+= & -\ket{00}\ket{-} \\
+  \end{array}
+\end{mathpar}
+
+Could think of $f(x, y) =  xy$ and output state being
+
+\begin{mathpar}
+  T(\ket{xy}\ket{-}) = (-1)^{xy}\ket{xy}\ket{-}
+\end{mathpar}
+
+Representation where function value is coming together with amplitude:
+\emph{Phased representation}
+
+
+\begin{itemize}
+\item Right now, we got the second input and second ouput lying around
+\item Can we make the gate interface simpler by hiding them?
+\item Like:
+
+  \begin{circuitikz} 
+    \tikzset{%
+      mux11/.style={
+        muxdemux,
+        muxdemux def={Lh=3, Rh=3, NL=1, NR=1, NB=0},%
+      },%
+      buswidth/.style={decoration={
+        markings,
+        mark= at position 0.5 with {\node[font=\footnotesize] {/};\node[below=1pt] {\tiny #1};}
+        }, postaction={decorate}}
+    }
+    \node[mux11] (G) {$U_f^{\pm}$};
+    \draw (G.lpin 1) \mwire{0.2}{n}{++(-0.2, 0)} node[xshift=-2mm] {$\ket{x}$};
+    \draw (G.rpin 1) \mwire{0.2}{n}{++(0.2, 0)} node[xshift=9mm] {$(-1)^{f(x)}\ket{x}$};
+
+    % \draw[buswidth={n}] (G.lpin 1) ++(-0.2, 0) node[xshift=-2mm] {$\ket{x}$};
+    % \draw[buswidth={n}] (G.rpin 1) ++(0.2, 0) node[xshift=9mm] {$(-1)^{f(x)}\ket{x}$};
+  \end{circuitikz} 
+
+\end{itemize}
+
+\begin{mathpar}
+  
+  \begin{array}{cl}
+  & U_f(\ket{x}\ket{-}) \\
+= & U_f(\ket{x}\left(\frac{1}{\sqrt{2}}\ket{0} - \frac{1}{\sqrt{2}}\ket{1} \right) \\
+= & 
+
+  \end{array}
+\end{mathpar}
+
+
+$s$ is the secret.
+
+\begin{quantikz}
+ \lstick{$\kket{s}$} &           &          & \ctrl{1}  \\
+ \lstick{$\kket{0}$} & \gate{\$} & \ctrl{2} & \targ{}   \\
+ \lstick{$\kket{0}$} &           & \targ{}  &
+\end{quantikz}
+
+\section{Deutsch's problem}
+\begin{itemize}
+\item Given a Boolean function $f: \{01\} \mapsto \{01\}$
+\item Four possibilities ($2*2 = 4$)
+\item $f$ is a \emph{constant function} if $\forall x, f(x)=0$ or $\forall x, f(x)=1$
+\item $f$ is a \emph{balanced function} if number of f(x)=0 and f(x)=1 are
+  the same
+\item 
+\textbf{Problem}:
+Assuming that $f$ is either balanced or constant, find which among
+them two $f$ is with the least number of queries to the truth table of
+$f$.
+\item ie, in the case of this $f$, compute $f(0) \oplus f(1)$
+  \begin{itemize}
+  \item $f(0) \oplus f(1) = 0 \Rightarrow$ constant function
+  \item $f(0) \oplus f(1) = 1 \Rightarrow$ balanced function
+  \end{itemize}
+\end{itemize}
+
+
+\section{Deutsch-Josza problem}
+\begin{itemize}
+\item A generalization of Deutsch's problem
+\item Given a Boolean function $f: \{01\}^n \mapsto \{01\}$
+\item Find if $f$ is constant or balanced when it is known that $f$ is
+  one of the two.
+\item With least queries to $f$
+\item This was the first algorithm for which a quantum algorithm was
+  found to be better than the best classical algorithm
+\item Classical algorithm $\Rightarrow$ has to query at least
+  $\frac{n}{2}+1$ times before a decision can be made
+  \begin{itemize}
+  \item Look at $\frac{n}{2}+1$ random unique entries of $f$
+  \item If it's either all $0$ or all $1$, then it's constant
+  \item Otherwise it's balanced
+  \item Because it's already known that $f$ is either constant or balanced
+  \end{itemize}
+\item Quantum algorithm $\Rightarrow$ only one query needed (because
+  of superpositioned states)
+\item Balanced $\Rightarrow$ $2^{n-1}$ are $0$, $2^{n-1}$ are $1$
+\end{itemize}
+
+The quantum algorithm $\Rightarrow$ input states are in superposition.
+
+\end{document}

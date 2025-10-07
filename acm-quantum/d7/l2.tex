@@ -1,0 +1,294 @@
+\documentclass[12pt]{article}
+
+\input{../config.tex}
+
+\begin{document}
+
+\title{Lecture 2: Fourier transform}
+\author{Lecturer: Rajendra Kumar\\ Scribe: Julin Shaji}
+\date{June 16, 2025}
+\maketitle
+
+\section{Intro}
+\begin{itemize}
+\item DFT: Discrete Fourier Transform
+\item FFT: Fast Fourier Transform
+\item
+  (We won't be talking about the classic Fourier transforms used
+  for continuous signals).
+\item
+  An application of FFT = multiplication of two polynomials of the
+  same degree.
+
+\end{itemize}
+
+\section{n-th roots of unity}
+\begin{itemize}
+\item $Z^n$ such that $(Z_n)^n = 1$
+\item Examples:\\
+% \begin{center}
+  \begin{tabular}{cl}
+    \toprule
+    $n$  & $Z_n$ \\
+    \midrule
+   1st & $\{1\}$ \\
+   2nd & $\{1, -1\}$ \\
+   4th & $\{1, -1, i, -i\}$ \\
+    \bottomrule
+  \end{tabular}
+% \end{center}
+\end{itemize}
+
+\section{Primitive roots of unity}
+\begin{itemize}
+\item There are many roots of unity
+\item Special case: \emph{Primitive roots of unity}
+\item $n-th$ primitive root of unity: $\omega_n$
+\item A root of unity $Z_n$ is an $n-th$ primitive root of unity iff:
+  \begin{itemize}
+  \item $(Z_n)^n = 1$ (ie, must be a root of unity)
+  \item $(Z_n)^j \neq 1, \forall j<n$
+  \end{itemize}
+\item Euler's formula:
+\begin{mathpar}
+ e^{2 \pi i \theta} = cos(2\pi\theta)  + i.sin(2\pi\theta)
+\end{mathpar}
+\end{itemize}
+  
+Equation for N-th primitive root of unity
+  \begin{mathpar}
+\omega_N = e^{-2 \pi i / N}
+\\
+\begin{array}{cl}
+   & \omega_N^N \\
+ = & (e^{-2 \pi i / N})^N \\
+ = & e^{-2 \pi i} \\
+ = & e^{2 \pi i (-1)} \\
+ = & cos(2\pi (-1))  + i.sin(2\pi (-1)) \\
+ = & cos(2\pi) - i.sin(2\pi) \\
+ = & cos(0) - i.sin(0) \\
+ = & 1 - i.0 \\
+ = & 1 \\
+\end{array}
+  \end{mathpar}
+  
+\section{Fourier transform}
+\begin{itemize}
+\item A linear transformation $\Rightarrow$ a matrix
+\item $v \to F.v = \hat{v}$
+\item Input vector = an N-dimensional vector. $v \in \mathbb{R}^N$
+  \begin{mathpar}
+v = 
+    \begin{bmatrix}
+v_{11} \\      
+v_{21} \\      
+\vdots \\      
+v_{n1} \\      
+    \end{bmatrix}
+  \end{mathpar}
+\item k-th element of $\hat{v}$ is:
+  \begin{mathpar}
+\hat{v}_k = \sum\limits_{j=0}^{N-1} v_j e^{-2\pi i j k / N}
+\\
+\text{Euler's formula says:}
+\\
+\omega_N^j = e^{-2\pi i j / N} = cos(-2\pi j /N) + i.sin(-2\pi j/N)
+\\
+\text{Therefore,}
+\\
+\begin{array}{lcr}
+\hat{v}_k & = & \sum\limits_{j=0}^{N-1} v_j e^{-2\pi i j k / N} \\
+          & = & \sum\limits_{j=0}^{N-1} v_j \omega_N^{j.k} \\
+\end{array}
+
+  \end{mathpar}
+\item What would the matrix $F$ for Fourier transform that can convert
+  $v$ to $\hat{v}$ be?
+  \begin{mathpar}
+    \begin{bmatrix}
+    ? & ? & \ldots & ? \\  
+    ? & ? & \ldots & ? \\  
+      &   & \vdots &   \\  
+    ? & ? & \ldots & ? \\  
+    \end{bmatrix}
+    \begin{bmatrix}
+    v_0 \\  
+    v_1 \\  
+    \vdots \\
+    v_{N-1} \\  
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    \hat{v_0} \\  
+    \hat{v_1} \\  
+    \vdots \\
+    \hat{v_{N-1}} \\  
+    \end{bmatrix}
+  \end{mathpar}
+\item As per the equation, first element of $\hat{v}$ (ie,
+  $\hat{v_0}$) should be same sum of elements of input vector $v$
+  $\Rightarrow$ first row of $\hat{v}$ is all ones.
+\item Similarly, we can see that $\hat{v_1} =
+  \sum\limits_{j=0}^{N-1}v_j w_N^j$
+\item Leading us to figure out that:
+  \begin{mathpar}
+    F_N = 
+  \frac{1}{\sqrt{N}}
+    \begin{bmatrix}
+     1 &        1   & 1          & \cdots &  1 \\ 
+     1 & \omega_N   & \omega_N^2 & \cdots & \omega_N^{N-1} \\ 
+     1 & \omega_N^2 & \omega_N^4 & \cdots & \omega_N^{2(N-1)} \\ 
+       &            & \ldots     &        &    \\
+     1 & \omega_N^{N-1} & \omega_N^{2(N-1)} & \cdots &  \omega_N^{(N-1)(N-1)} \\ 
+    \end{bmatrix}
+  \end{mathpar}
+\end{itemize}
+
+Example:
+
+Find $F^3
+  \begin{bmatrix}
+    0 \\
+    1 \\
+    0 \\
+  \end{bmatrix}$
+
+\begin{mathpar}
+  \begin{array}{cl}
+    &
+  F^3
+  \begin{bmatrix}
+    0 \\
+    1 \\
+    0 \\
+  \end{bmatrix} \\
+= &
+  \frac{1}{\sqrt{3}}
+  \begin{bmatrix}
+    1 & \omega & \omega \\
+    1 & \omega^2 & \omega^4 \\
+    1 & \omega^3 & \omega^6 \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    0 \\
+    1 \\
+    0 \\
+  \end{bmatrix} \\
+= &
+    \frac{1}{\sqrt{3}}
+  \begin{bmatrix}
+    \omega \\
+    \omega^2 \\
+    \omega^3 \\
+  \end{bmatrix} \\
+= &
+    \frac{1}{\sqrt{3}}
+  \begin{bmatrix}
+    \omega \\
+    \omega^2 \\
+    1 \\
+  \end{bmatrix} \\
+  \end{array}
+\end{mathpar}
+
+\section{Properties of a unitary matrix}
+\begin{itemize}
+\item All column vectors are orthogonal to each other
+\item All columns = Unit length (ie, the norm. Square root of sum of squares)
+\end{itemize}
+
+Is $F_N$ unitary?
+\begin{itemize}
+\item Yes.
+\item Norm of each column = $\sqrt{N}$
+\end{itemize}
+
+\begin{mathpar}
+  \begin{array}{cl}
+   & Z^N-1 \\
+ = & (Z-1)(Z-\omega) \cdots (Z-\omega^{N-1}) \\
+ = & Z^N-(1+\omega+\omega^2+\cdots+\omega^{N-1}) Z^{N-1} + \cdots \\
+\Rightarrow & (1+\omega+\omega^2+\cdots+\omega^{N-1}) = 0  (HOW??) \\
+  \end{array}
+\end{mathpar}
+
+
+\section{Fast fourier transform}
+\begin{itemize}
+\item $F_N \Rightarrow$ matrix multiplication $\Rightarrow O(N^2)$
+\item We can do better with FFT $\Rightarrow O(n logn)$
+\item A recursive algorithm
+\end{itemize}
+
+Recall,
+ 
+\begin{mathpar}
+\hat{v_j} = \sum\limits_{k=0}^{N-1} v_k w_N^{j.k}
+\end{mathpar}
+
+Let us divide this into two equal parts. One for even $j$ and other
+for odd $j$.
+
+\begin{mathpar}
+  \begin{array}{rcl}
+\hat{v_j} & = & \sum\limits_{k is even}^{} v_k w_N^{j.k}
+            + \omega^j \sum\limits_{k is odd}^{} v_k w_N^{j(k-1)} \\
+ & = & \sum\limits_{k is even}^{} v_k w_{N/2}^{kj/2}
+            + \omega^j \sum\limits_{k is odd}^{} v_k w_{N/2}^{j(k-1)/2} \\           
+  \end{array}
+\end{mathpar}
+
+Thus we convert one DFT over N dimensions into two DFTs over N/2
+dimensions each.
+
+
+Time complexity:
+\begin{itemize}
+\item Every step halves the size of input being analyzed
+\item Work needed to merge back results = 4N (how??)  
+\item Size of an individual DFT at k-th recursion = $\frac{N}{2^k}$
+\end{itemize}
+
+\begin{mathpar}
+  \begin{array}{rcl}
+T(N) & = & 2T(N/2) * 4N \\
+    & = & O(logN) * O(N) \\
+    & = & O(N logN) \\
+  \end{array}
+\end{mathpar}
+
+
+\section{Convolution of two vectors}
+\begin{itemize}
+\item Two vectors $a$ and $b$ both of dimension $N \in \mathbb{R}^N$
+\item Result is an N-dimensional vector: $a * b$
+\item i-th element of the result is given as:
+  \begin{mathpar}
+    (a * b)_i = \sum\limits_{j=0}^{N-1} a_i b_{(i-j)mod N}
+  \end{mathpar}
+\end{itemize}
+
+\section{Polynomial multiplication with FFT}
+\begin{itemize}
+\item An application of Fourier transform
+\item Input: 2 polynomials $p$ and $q$ each of degree $d$
+  \begin{mathpar}
+p(x) = \sum\limits_{i=0}^{d} a_i x^i
+
+q(x) = \sum\limits_{i=0}^{d} b_i x^i
+  \end{mathpar}
+\item Output: Product of $p$ and $q$, which has degree $2d$
+  \begin{mathpar}
+    \begin{array}{rcl}
+pq(x) & = & (a_0 b_0)x^0 + (a_0 b_1 + a_1 b_0)x^1 + \cdots  \\
+      & = & \sum\limits_{i=0}^{2d} \left(\sum\limits_{j=0}^{i} a_j
+            b_(i-j) \right) x^i \\
+    \end{array}
+  \end{mathpar}
+\item How can we use FFT here?
+\item Vector convolution operation helps.
+\end{itemize}
+
+Example:
+
+\end{document}

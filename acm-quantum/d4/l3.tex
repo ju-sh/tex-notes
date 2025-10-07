@@ -1,0 +1,143 @@
+\documentclass[12pt]{article}
+
+\input{../config.tex}
+
+\begin{document}
+
+\title{Lecture 3: Classical probability inequalities}
+\author{Lecturer: Jaikumar Radhakrishnan\\ Scribe: Julin Shaji}
+\date{June 12, 2025}
+\maketitle
+
+
+\section{Markov's inequality}
+\begin{itemize}
+\item Given: A non-negative random variable $X$
+\item Needed: Probability that $X \ge t$ where $t > 0$
+  \begin{itemize}
+  \item $P(x \ge t) \le \frac{\mu}{t}$
+  \item where $\mu$ is expectation of the random var $X$ (ie, $E[X]$)
+  \end{itemize}
+\item Example for usefulness: given that average mark of a set of
+  students is 5, at most how many student can have 50 marks?
+  % not sure about this
+\end{itemize}
+
+% Plot graph for step func J and the overlaying linear function
+
+\begin{itemize}
+\item P=0 for x<t, otherwise P=1
+\item Let this be represented as a function $J$, which is a step function
+\item A function $y=\frac{x}{t}$ would completely cover $J$.
+\item $E[J] = P(x \ge t)$
+\item So,
+  \begin{mathpar}
+    \begin{array}{rcl}
+E[J] & \le & E[\frac{x}{t}]   \\
+     & \le & \frac{1}{t} E[x] \\
+     & \le & \frac{1}{t} \mu  \\
+    \end{array}
+  \end{mathpar}
+\item Variance = $\sigma^2$ (where $\sigma$ is standard deviation)
+  \begin{mathpar}
+    \begin{array}{rcl}
+Var(x) & = & E[(x-\mu)^2] \\
+       & = & \sigma^2     \\
+    \end{array}
+  \end{mathpar}
+\end{itemize}
+
+\section{Chebyshev's inequality}
+
+\begin{itemize}
+\item Given: random variable $X$
+\item 
+\begin{mathpar}
+  P(|X - \mu| \ge t) \le \frac{\sigma^2}/{t^2}
+\end{mathpar}
+\item where $t > 0$
+\end{itemize}
+
+% Plot graph here
+
+\begin{itemize}
+\item P=0 for $x \in [\mu-t, \mu+t]$ (closed interval)
+\item
+  Let this be represented as a function $J$, which is like a band-stop
+filter function
+\item Parabola shape sufficient to completely cover $J$.
+  \begin{itemize}
+  \item Modulus won't cut it because it would work only for x=1 ??
+  \end{itemize}
+\item $E[J] = P(|x - \mu| \ge t)$
+  \begin{mathpar}
+    \begin{array}{crcl}
+               &    J & \le & \frac{(x-\mu)^2}{t^2}     \\
+  \Rightarrow  & E[J] & \le & E[\frac{(x-\mu)^2}{t^2}]  \\
+  \Rightarrow  &      & \le & \frac{1}{t^2}E[(x-\mu)^2] \\
+  \Rightarrow  &      & \le & \frac{\sigma^2}{t^2}      \\
+    \end{array}
+  \end{mathpar}
+\end{itemize} 
+
+\section{Sum of n independent 01 variables} 
+
+\begin{itemize}
+\item $S = x_1 + x_2 + .... + x_n$
+\item The variables are \emph{independent}, so their probabilities are
+  independent of each other.
+  \begin{mathpar}
+    x_i =
+    \begin{cases}
+      0 & \text{with probability } p \\
+      1 & \text{with probability } (1-p)
+    \end{cases}
+    
+E[x_i] = p \\
+Var(x_i) = p(1-p) \\     
+  \end{mathpar}
+\item Since the $x_i$-s are independent (pairwise independence
+  would've been sufficient too),
+  \begin{mathpar}
+    \begin{array}{rcl}
+E[S] & = & E[x_1] + E[x_2] + .... + E[x_n] \\
+     & = & np \\
+    \end{array}
+    \begin{array}{rcl}
+Var(S) & = & E(x_1) + E(x_2) + .... + E(x_n) \\
+       & = & n*p(1-p) \\
+    \end{array}
+  \end{mathpar}
+\end{itemize}
+
+Suppose we have a randomized algorithm $A$.
+
+\begin{itemize}
+\item 
+\begin{mathpar}
+    \begin{cases}
+      correct & \text{with probability } \frac{1}{2}+\epsilon \\
+      wrong   & \text{with probability } \frac{1}{2}-\epsilon \\
+    \end{cases}
+\end{mathpar}
+\item where $\epsilon$ is a small value
+\item For a problem with output $\in \{0, 1\}$
+\item
+  Getting an algorith which gives 0 or 1 with equal probability
+  $\frac{1}{2}$ is easy.
+\item
+  Because there is no bias. It's just a matter of getting the output
+  of a \$-gate. Or flipping a coin.
+  (Reminder: We are currently in a randomized setting.)
+\item
+  Doing better than equal probability, ie having a $\pm \epsilon$ is
+  less trivial.
+\item But if such a function is available, the small delta will
+  accumulate to add up if we repeatedly compute the same thing,
+  eventually letting us have more certainity about the output. 
+\end{itemize}
+
+% Plot graph for Chebyshev equality
+
+
+\end{document}

@@ -1,0 +1,39 @@
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{booktabs}
+\usepackage{mathpartir}
+\usepackage[backend=bibtex, style=numeric]{biblatex}
+\usepackage{hyperref}
+\usepackage{soul}
+
+% https://tex.stackexchange.com/questions/611251/in-circuitikz-multiwire-how-to-so-specify-label-placement
+\usepackage[siunitx, RPvoltages, fulldiode, american voltages]{circuitikz}
+\newcommand{\mwire}[3]{% args: position (0.1-0.9), label, final coordinate
+    coordinate(tmp1) #3 coordinate(tmp2)
+    (tmp1) -- ($(tmp1)!{#1-0.1}!(tmp2)$) to[multiwire=#2] ($(tmp1)!{#1+0.1}!(tmp2)$) -- (tmp2)
+}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc,decorations.markings}
+\usetikzlibrary{quantikz2}
+\usetikzlibrary{external}
+\tikzexternalize
+
+\usetikzlibrary{positioning}
+\ctikzset{logic ports=ieee}
+
+% \newcommand\ket[1]{
+%   | #1 \rangle
+% }
+
+%   % \left\langle #1 \middle| #2 \right\rangle
+% \newcommand\bra[1]{
+%   \langle #1 |
+% }
+
+\newcommand\kket[1]{
+  | #1 \rangle \rangle
+}
+% | #1 \rangle \kern-1.35pt \rangle

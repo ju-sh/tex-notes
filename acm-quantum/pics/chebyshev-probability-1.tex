@@ -1,0 +1,61 @@
+
+\documentclass[tikz,border=3.14mm]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{mathtools}
+\usetikzlibrary{angles,quotes,arrows.meta}
+
+% Line from origin passing through a point 
+% #1=x:
+% #2=y:
+\pgfmathdeclarefunction{oline}{2}{%
+  \pgfmathparse{(#2/#1)*x}%
+}
+
+\begin{document}
+
+\begin{tikzpicture}
+\begin{axis}[
+  no markers,
+  domain=0:10,
+  samples=1000,
+  axis lines*=left,
+  y axis line style={draw=none},
+  xlabel=$$,
+  ylabel=$$,
+  every axis y label/.style={
+    at=(current axis.above origin),
+    anchor=south
+  },
+  every axis x label/.style={
+    at=(current axis.right of origin),
+    anchor=west
+  },
+  height=3cm,
+  width=10cm,
+  xtick={0, 5},
+  ytick=\empty,
+  xticklabels={\strut 0, \strut t},
+  enlargelimits=false,
+  clip=false,
+  axis on top,
+  grid = major,
+]
+  \addplot[thick, blue]
+    {oline(5,1)};
+
+  % % Shading part of the first plot
+  % \addplot[thick, blue]
+  %   {oline(5,1)};
+
+  % Shading part of the first plot
+  \addplot[fill=gray!20,
+           draw=none,
+          ]
+    {oline(5,1)}
+    \closedcycle;
+
+  \addplot[thick, red!50!black] {x>=5 ? 1 : 0};
+\end{axis}
+\end{tikzpicture}
+\end{document}

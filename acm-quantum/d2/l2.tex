@@ -1,0 +1,461 @@
+\documentclass[12pt]{article}
+
+\input{../config.tex}
+
+\begin{document}
+
+\title{Lecture 2: Qubits, quantum states, and quantum gates}
+\author{Lecturer: Dinesh Krishnamoorthy\\ Scribe: Julin Shaji}
+\date{June 10, 2025}
+\maketitle
+
+\begin{itemize}
+\item Quantum registers
+  \begin{itemize}
+  \item Doesn't hold just 0 or 1
+  \item Stores \emph{qubits}
+  \end{itemize}
+\item
+  A qubit value is like $\ket{\phi} = \alpha \ket{0} + \beta \ket{1}$
+  \begin{itemize}
+  \item State can be $0$ with probability $|\alpha|^2$
+  \item State can be $1$ with probability $|\beta|^2$
+  \item $\alpha, \beta \in \mathbb{C}$ (complex numbers)
+  \item For simplicity, we treat $\alpha$ and $\beta$ as $\mathbb{R}$ values for now.
+  \item Note: $\alpha$ and $\beta$ can be negative.
+  \item Property: $|\alpha|^2 + |\beta|^2 = 1$
+  \item DBT: What does $\alpha$ or $\beta$ being negative signify/mean?
+  \item $\alpha$ and $\beta$ are \emph{amplitudes}
+  \item Analogous values are probabilities in the case of deterministic randomized context.
+  \end{itemize}
+\item NQ: Why use squares of amplitudes instead of using amplitudes themselves?
+  \begin{itemize}
+    \item ANS: It corresponds to Euclidean length of vectors
+    \item Probably other nice-to-have properties comes for free along
+      with this.
+  \end{itemize}
+\item 
+  $\alpha \ket{0} + \beta \ket{1}$ can be represented as the vector%
+  \begin{mathpar}%
+    \begin{bmatrix}
+      \alpha \\
+      \beta  \\
+    \end{bmatrix}
+  \end{mathpar}
+\item Current state is a \emph{superposition} of states $\ket{0}$ and $\ket{1}$.
+\end{itemize}
+
+Ket notation
+\begin{itemize}
+\item Popularized by Paul Dirac \cite{dirac1939new}
+\item aka Dirac notation
+\item 
+  $\alpha \ket{0} + \beta \ket{1}$ is pronounced
+  'alpha ket zero plus beta ket one'
+\item Example of a 2-qubit quantum state:
+  \begin{mathpar}
+  \frac{1}{2}\ket{00} +
+  \frac{1}{2}\ket{01} +
+  \frac{1}{2}\ket{10} -
+  \frac{1}{2}\ket{11}
+   = 
+  \begin{bmatrix}
+    1/2 \\
+    1/2 \\
+    1/2 \\
+    -1/2 \\
+  \end{bmatrix}
+  \end{mathpar}
+\item Sum of squares of amplitudes = 1 for a valid quantum state
+\item The negative sign might as well have been positive in the above example.
+\item States in a 2-qubit system:
+  \begin{mathpar}
+   \ket{00} =%
+\begin{bmatrix}
+  1 \\
+  0 \\
+  0 \\
+  0 \\
+\end{bmatrix}
+
+   \ket{01} =%
+\begin{bmatrix}
+  0 \\
+  1 \\
+  0 \\
+  0 \\
+\end{bmatrix}
+
+   \ket{10} =%
+\begin{bmatrix}
+  0 \\
+  0 \\
+  1 \\
+  0 \\
+\end{bmatrix}
+
+   \ket{11} =%
+\begin{bmatrix}
+  0 \\
+  0 \\
+  0 \\
+  1 \\
+\end{bmatrix}
+  \end{mathpar}
+\item States in an n-qubit system $\in {01}^n$
+    % \sum\limits‎_‎{x \in {\{01\}}^n}^{‎}
+  \begin{mathpar}
+    \ket{\phi} = \sum_‎{x \in {\{01\}}^n}^{} \alpha_x \ket{x} \\
+    \left( \sum_‎{x \in {\{01\}}^n}^{} |\alpha_x|^2 \right) = 1 \\
+  \end{mathpar}
+\item
+  DBT: For a 2-qubit system, the set $\{\ket{00}, \ket{01}, \ket{10},
+  \ket{11}\}$ may be thought of as the basis states or the generating
+  set ??
+\end{itemize}
+
+Double slit experiment (Physics):
+\begin{itemize}
+\item Light particles exhibiting behaviour of waves
+\item Discoveries regarding dual nature of light:
+  \begin{itemize}
+  \item J. J. Thompson: $e^-$ is particle
+    \begin{itemize}
+    \item Physics Nobel 1906: For conduction of electricity in gases
+    \end{itemize}
+  \item de Broglie: $e^-$ is wave
+    \begin{itemize}
+    \item Confirmed by Davisson-Germer experiment
+    \item Physics Nobel 1929
+    \end{itemize}
+  \end{itemize}
+\item
+  Electrons could be thought as being a in a superposition of wave
+  and particle states.
+\end{itemize}
+
+\$-gate:
+\begin{itemize}
+\item 
+  Dirac notation:
+  $\frac{1}{\sqrt{2}}\ket{0} +
+   \frac{1}{\sqrt{2}}\ket{1}$
+\item 
+\end{itemize}
+
+\section{'\$-gate'}
+  \begin{mathpar}
+    \begin{bmatrix}
+      1/2 & 1/2 \\
+      1/2 & 1/2 \\
+    \end{bmatrix}
+  \end{mathpar}
+\begin{itemize}
+\item
+  A name we just made up to call the non-quantum but randomized version of
+  Hadamard gate
+\item Can be thought of as a gate that gives 0 or 1 with equal probability
+\item Regardless of the input
+\end{itemize}
+
+\$-gate is not a quantum gate. Let's consider an example.
+
+\begin{mathpar}
+\begin{bmatrix}
+  1 \\  
+  0 \\  
+\end{bmatrix}
+\end{mathpar}
+is a valid quantum state because $|1|^2 + |0|^2 = 1$.
+
+Yet applying \$-gate to this state gives
+
+\begin{mathpar}
+  \begin{bmatrix}
+    1/2 & 1/2 \\
+    1/2 & 1/2 \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    1 \\  
+    0 \\  
+  \end{bmatrix} =
+  \begin{bmatrix}
+    1/2 \\  
+    1/2 \\  
+  \end{bmatrix}
+\end{mathpar}
+
+which is not a quantum state since 
+$|1/2|^2 + |1/2|^2 = 1/2 \neq 1$.
+
+
+\section{Reversible computations}
+\begin{itemize}
+\item Any reversible computation is a \emph{permutation matrix} 
+  \begin{itemize}
+  \item Every row has exactly one 1
+  \item Every column has exactly one 1
+  \end{itemize}
+\item Reversible $\Rightarrow$ it's just a rearrangement
+\item Classical reversible operations are also quantum operations ??
+\item
+  In order to be reversible, we need to be able to 'unflip the
+  coin' in the case of a coin toss.
+\end{itemize}
+
+\section{Measurement}
+\begin{itemize}
+\item A quantum system is in a superposition of states
+\item Measure it $\Rightarrow$ it collapses to one of the superpositioned states
+\end{itemize}
+
+\section{Building quantum chips}
+\begin{itemize}
+\item DBT: Needs Hadamard gates ?? As a building block ??
+\item
+  Handling of $\mathbb{R}$ values needs arbitrary precision, which
+  is not possible. So we can deal with an accuracy $\epsilon$ instead.
+\item Solovay-Kitaev theorem. Mentions number of quantum gates needed ??
+  \begin{mathpar}
+    1000t\left(log \frac{t}{\epsilon} \right)
+  \end{mathpar}
+  where $t$ is the number of quantum gates ??
+\end{itemize}
+
+
+\section{Quantum gates}
+\subsection{Properties of quantum gates}
+\begin{itemize}
+\item Transforms a qubit
+  \begin{itemize}
+  \item Input = a qubit
+  \item Output = a qubit
+  \end{itemize}
+\item Must be a linear transformation
+  \begin{itemize}
+  \item Scaling the whole thing must be equal to scaling the
+    individual components and then adding them up
+  \item
+    $T(\alpha \ket{u} + \beta \ket{v}) =
+    \alpha T(\ket{u}) + \beta T(\ket{v})$
+  \end{itemize}
+  \begin{enumerate}
+  \item $T(\ket{u} + \ket{v}) = T(\ket{u}) + T(\ket{v})$
+  \item $T(\alpha \ket{u}) = \alpha T(\ket{u})$
+  \end{enumerate}
+\end{itemize}
+
+\subsection{Hadamard gate}
+
+\begin{center}
+  \begin{quantikz}
+   \lstick{x} & \gate{H} & \rstick{y} \\
+  \end{quantikz}
+
+  \begin{mathpar}
+    \begin{bmatrix}
+      1/\sqrt{2} & 1/\sqrt{2} \\
+      1/\sqrt{2} & -1/\sqrt{2} \\
+    \end{bmatrix}
+  \end{mathpar}
+\end{center}
+
+\begin{itemize}
+\item Acts on a single qubit
+\item DBT: Creates superposition of input basis states ?? $^w$ \cite{hadamardgate}
+  \begin{mathpar}
+  \ket{0} \mapsto \frac{\ket{0}+\ket{1}}{\sqrt{2}}
+
+  \ket{1} \mapsto \frac{\ket{0}-\ket{1}}{\sqrt{2}}
+  \end{mathpar}
+\end{itemize}
+
+The operation can be represented as a matrix $\Rightarrow$ it's linear.
+
+But does it make valid qubits? Let's try an example with a vector.
+
+\begin{mathpar}
+  \begin{bmatrix}
+    1/\sqrt{2} & 1/\sqrt{2} \\
+    1/\sqrt{2} & -1/\sqrt{2} \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    \alpha \\      
+    \beta  \\      
+  \end{bmatrix} =
+  \begin{bmatrix}
+    \alpha/\sqrt{2} + \beta/\sqrt{2} \\
+    \alpha/\sqrt{2} - \beta/\sqrt{2} \\
+  \end{bmatrix}
+  
+ \left(\frac{\alpha + \beta}{\sqrt{2}}\right)^2 +
+ \left(\frac{\alpha - \beta}{\sqrt{2}}\right)^2 =
+ |\alpha|^2 + |\beta|^2 = 1
+\end{mathpar}
+
+So valid.
+
+Hadamard gate is reversible. What happens when we apply Hadamard gate
+twice to an input?
+
+% \begin{quantikz}[slice all]
+%  \lstick{$\ket{0}$} & \gate{H} & \gate{H} & \meter{}
+% \end{quantikz}
+\begin{quantikz}
+   \lstick{$\ket{0}$}
+ \slice[label style={pos=1, anchor=north}]{$\ket{0}$}
+& 
+ \gate{H}
+ \slice{\tiny $\frac{1}{\sqrt{2}}\ket{0} + \frac{1}{\sqrt{2}}\ket{1}$} 
+ &
+ \gate{H}
+ \slice[label style={pos=1, anchor=north}]{\tiny $H\left(
+     \frac{1}{\sqrt{2}}\ket{0} + \frac{1}{\sqrt{2}}\ket{1} \right)$} 
+ & \meter{}
+\end{quantikz}
+ %\lstick{$\ket{0}$}\slice{step} & \gate{H}\slice{step} & \gate{H}\slice{step} & \meter{} \\
+
+Let's use linearity instead of explicitly expanding $H$.
+
+\begin{mathpar}
+  H\left(\frac{1}{\sqrt{2}}\ket{0} + \frac{1}{\sqrt{2}}\ket{1} \right) \\
+= \frac{1}{\sqrt{2}}H\ket{0} + \frac{1}{\sqrt{2}}H\ket{1} \\
+= \frac{1}{\sqrt{2}}\left(\frac{1}{\sqrt{2}}\ket{0} + \frac{1}{\sqrt{2}}\ket{1} \right)
+  +
+  \frac{1}{\sqrt{2}}\left(\frac{1}{\sqrt{2}}\ket{0} -
+    \frac{1}{\sqrt{2}}\ket{1} \right) \\
+= \frac{1}{2}\ket{0} + 
+  \frac{1}{2}\ket{1} + 
+  \frac{1}{2}\ket{0} - 
+  \frac{1}{2}\ket{1} \\
+= \ket{0}   
+\end{mathpar}
+
+ie, starting with $\ket{0}$, we \emph{always} get $\ket{0}$ itself
+upon applying a Hadamard gate.
+
+There is a destructive interference happening. Which is why two terms
+got cancelled out in the above derivation.
+
+\subsection{Swap gate}
+\begin{itemize}
+\item $(x,y) \mapsto (y,x)$
+\item Classical version:
+  \begin{mathpar}
+    \begin{bmatrix}
+      1 & 0 & 0 & 0 \\     
+      0 & 0 & 1 & 0 \\     
+      0 & 1 & 0 & 0 \\     
+      0 & 0 & 0 & 1 \\     
+    \end{bmatrix}
+  \end{mathpar}
+\end{itemize}
+
+\subsection{Bra-ket notation}
+\begin{itemize}
+\item Column vectors are represented with ket.
+  \begin{mathpar}
+    \ket{00} =
+    \begin{bmatrix}
+       1 \\ 
+       0 \\ 
+       0 \\ 
+       0 \\ 
+    \end{bmatrix}
+  \end{mathpar}
+\item Row vectors are represented with bra.
+  \begin{mathpar}
+    \bra{00} =
+    \begin{bmatrix}
+       1 & 0 & 0 & 0 
+    \end{bmatrix}
+  \end{mathpar}
+\end{itemize}
+
+Let's us try to use the bra-ket notation to write the swap gate.
+
+\begin{mathpar}
+  \begin{bmatrix}
+    1 & 0 & 0 & 0 \\     
+    0 & 0 & 1 & 0 \\     
+    0 & 1 & 0 & 0 \\     
+    0 & 0 & 0 & 1 \\     
+  \end{bmatrix} =
+  \begin{bmatrix}
+    1 & 0 & 0 & 0 \\     
+    0 & 0 & 0 & 0 \\     
+    0 & 0 & 0 & 0 \\     
+    0 & 0 & 0 & 0 \\     
+  \end{bmatrix} + 
+  \begin{bmatrix}
+    0 & 0 & 0 & 0 \\     
+    0 & 0 & 1 & 0 \\     
+    0 & 0 & 0 & 0 \\     
+    0 & 0 & 0 & 0 \\     
+  \end{bmatrix} +
+  \begin{bmatrix}
+    0 & 0 & 0 & 0 \\     
+    0 & 0 & 0 & 0 \\     
+    0 & 1 & 0 & 0 \\     
+    0 & 0 & 0 & 0 \\     
+  \end{bmatrix} +
+  \begin{bmatrix}
+    0 & 0 & 0 & 0 \\     
+    0 & 0 & 0 & 0 \\     
+    0 & 0 & 0 & 0 \\     
+    0 & 0 & 0 & 1 \\     
+  \end{bmatrix}
+  
+= 
+  \begin{bmatrix}
+     1 \\ 
+     0 \\ 
+     0 \\ 
+     0 \\ 
+  \end{bmatrix}
+  \begin{bmatrix}
+     1 & 0 & 0 & 0 
+  \end{bmatrix} + 
+  \begin{bmatrix}
+     0 \\ 
+     1 \\ 
+     0 \\ 
+     0 \\ 
+  \end{bmatrix}
+  \begin{bmatrix}
+     0 & 0 & 1 & 0 
+  \end{bmatrix} + 
+  \begin{bmatrix}
+     0 \\ 
+     0 \\ 
+     1 \\ 
+     0 \\ 
+  \end{bmatrix}
+  \begin{bmatrix}
+     0 & 1 & 0 & 0 
+  \end{bmatrix} + 
+  \begin{bmatrix}
+     0 \\ 
+     0 \\ 
+     0 \\ 
+     1 \\ 
+  \end{bmatrix}
+  \begin{bmatrix}
+     0 & 0 & 0 & 1 
+  \end{bmatrix}
+  
+= \ket{00}\bra{00} +
+  \ket{01}\bra{10} +
+  \ket{10}\bra{01} +
+  \ket{11}\bra{11}
+\end{mathpar}
+
+
+Now, let us try the Hadamard gate with bra-ket notation.
+
+\begin{mathpar}
+H =
+\ket{0}\left(\frac{1}{\sqrt{2}}\bra{0} + \frac{1}{\sqrt{2}}\bra{1}\right) +
+\ket{1}\left(\frac{1}{\sqrt{2}}\bra{0} - \frac{1}{\sqrt{2}}\bra{1}\right)
+\end{mathpar}
+

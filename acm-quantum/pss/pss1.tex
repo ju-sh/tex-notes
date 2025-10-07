@@ -1,0 +1,218 @@
+\documentclass[12pt]{exam}
+
+\input{../config.tex}
+
+\title{Problem solving session 1}
+\author{\tiny{JS}}
+\date{13 June 2025}
+
+\begin{document}
+
+\maketitle
+\printanswers
+
+\begin{questions}
+
+\question
+Recall that $H^{\otimes n} = H \otimes \cdots \otimes H$ .
+This is the same as applying $H$ individually on each of the $n$
+registers.
+
+\begin{parts}
+ \part 
+What is $H^{\otimes 3}\ket{010}$?
+
+\begin{solution}
+  \begin{mathpar}
+    \begin{array}{cl}
+    & H^{\otimes 3}\ket{010} \\
+  = & H\ket{0} \otimes H\ket{1} \otimes H\ket{0} \\
+  = & \ket{+} \otimes \ket{-} \otimes \ket{+} \\
+  = & \ket{+}\ket{-}\ket{+} \\
+    \end{array}
+  \end{mathpar}
+\end{solution}
+
+\part
+Let $x_1 \in \{0, 1\}$ and $H\ket{x_1} = \alpha \ket{0} + \beta
+\ket{1}$. Express $\alpha$ and $\beta$ as a function of $x_1$.
+
+\begin{solution}
+  \begin{itemize}
+  \item Given: $H\ket{x_1} = \alpha \ket{0} + \beta \ket{1}$
+  \item We know that $x_1 \in \{0, 1\}$.
+  \end{itemize}
+  
+  Let $x_1 = 0$.
+  
+  \begin{mathpar}
+    \begin{array}{rrcl}
+  & H\ket{x_1} & = & \alpha \ket{0} + \beta \ket{1} \\
+  \Rightarrow &  H\ket{0} & = & \alpha \ket{0} + \beta \ket{1} \\
+  \Rightarrow &   \ket{+} & = & \alpha \ket{0} + \beta \ket{1} \\
+  \Rightarrow &  \frac{1}{\sqrt{2}}\ket{0} + \frac{1}{\sqrt{2}}\ket{1} & = & \alpha \ket{0} + \beta \ket{1} \\
+    \end{array}
+  \end{mathpar}
+  
+  Now, let $x_1 = 1$.
+  
+  \begin{mathpar}
+    \begin{array}{rrcl}
+  & H\ket{x_1} & = & \alpha \ket{0} + \beta \ket{1} \\
+  \Rightarrow &  H\ket{1} & = & \alpha \ket{0} + \beta \ket{1} \\
+  \Rightarrow &   \ket{-} & = & \alpha \ket{0} + \beta \ket{1} \\
+  \Rightarrow &  \frac{1}{\sqrt{2}}\ket{0} - \frac{1}{\sqrt{2}}\ket{1} & = & \alpha \ket{0} + \beta \ket{1} \\
+    \end{array}
+  \end{mathpar}
+  
+  So,
+  
+  \begin{center}
+  \begin{tabular}{ccc}
+    \toprule
+    $x_1$ & $\alpha$ & $\beta$ \\
+    \midrule
+    0 & $\frac{1}{\sqrt{2}}$ & $\frac{1}{\sqrt{2}}$ \\
+    1 & $\frac{1}{\sqrt{2}}$ & $-\frac{1}{\sqrt{2}}$ \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  
+  Therefore:
+  
+  \begin{itemize}
+  \item $\alpha = \frac{1}{\sqrt{2}}$
+  \item $\beta = (-1)^{x_1} \frac{1}{\sqrt{2}}$
+  \end{itemize}
+\end{solution}
+
+\part
+Let $x_1, x_2 \in \{0, 1\}$ and $H^{\otimes 2} \ket{x_1 x_2} =
+\alpha_{00} \ket{00} +
+\alpha_{01} \ket{01} +
+\alpha_{10} \ket{10} +
+\alpha_{11} \ket{11}$.
+Express
+$\alpha_{00}$,
+$\alpha_{01}$,
+$\alpha_{10}$ and
+$\alpha_{11}$ as functions of $x_1$ and $x_2$.
+
+\begin{solution}
+  \begin{mathpar}
+    \begin{array}{rrcl}
+   & H^{\otimes 2} \ket{x_1 x_2} & = &
+  \alpha_{00} \ket{00} +
+  \alpha_{01} \ket{01} +
+  \alpha_{10} \ket{10} +
+  \alpha_{11} \ket{11} \\ 
+      
+   & H\ket{x_1} \otimes H\ket{x_2} & = &
+  \alpha_{00} \ket{00} +
+  \alpha_{01} \ket{01} +
+  \alpha_{10} \ket{10} +
+  \alpha_{11} \ket{11} \\ 
+    \end{array}
+  \end{mathpar}
+  
+  From what we know from the last subquestion, we know that this
+  corresponds to the following quantum circuit:
+  
+  \begin{center}
+  \begin{quantikz}
+   \lstick{$\ket{x_1}$} & \gate{H} & \rstick{$\frac{1}{\sqrt{2}} \ket{0} + (-1)^{-x_1}\ket{1}$} \\
+   \lstick{$\ket{x_2}$} & \gate{H} & \rstick{$\frac{1}{\sqrt{2}} \ket{0} + (-1)^{-x_2}\ket{1}$} \\
+  \end{quantikz}
+  \end{center}
+  
+  So, output would be
+  
+  \begin{mathpar}
+    \begin{array}{cl}
+    & \left(\frac{1}{\sqrt{2}} \ket{0} + (-1)^{-x_1}\ket{1}\right)
+      \otimes
+      \left(\frac{1}{\sqrt{2}} \ket{0} + (-1)^{-x_2}\ket{1}\right) \\
+  = & \frac{1}{\sqrt{2}*\sqrt{2}}\ket{00} +
+      \frac{(-1)^{x_2}}{\sqrt{2}*\sqrt{2}}\ket{01} +
+      \frac{(-1)^{x_1}}{\sqrt{2}*\sqrt{2}}\ket{10} +
+      \frac{(-1)^{x_1}(-1)^{x_2}}{\sqrt{2}*\sqrt{2}}\ket{11} \\
+  = & \frac{1}{2}\ket{00} +
+      \frac{(-1)^{x_2}}{2}\ket{01} +
+      \frac{(-1)^{x_1}}{2}\ket{10} +
+      \frac{(-1)^{x_1}(-1)^{x_2}}{2}\ket{11} \\
+    \end{array}
+  \end{mathpar}
+  
+  Therefore,
+  
+  \begin{itemize}
+  \item $\alpha_{00} = \frac{1}{2}$
+  \item $\alpha_{01} = \frac{(-1)^{x_2}}{2}$
+  \item $\alpha_{10} = \frac{(-1)^{x_1}}{2}$
+  \item $\alpha_{11} = \frac{(-1)^{x_1}(-1)^{x_2}}{2}$
+  \end{itemize}
+\end{solution}
+
+\part
+Let $x_1, \ldots, x_n \in \{0, 1\}$ and
+$H^{\otimes n} \ket{x_1 x_2 \ldots, x_n}
+= \sum_{y \in \{0,1\}^n} \alpha_y \ket{y}$.
+For each $y ∈ {0, 1}^n$,
+express $\alpha_y$ as a function of $x_1, \ldots, x_n$
+(Note: Your expression of $\alpha_y$ must depend on
+$x_1, \ldots, x_n$ as well as $y_1, \ldots, y_n$).
+
+\begin{solution}
+  \begin{mathpar}
+  \begin{array}{cl}
+    & H^{\otimes n} \ket{x_1 x_2 \ldots, x_n} \\
+  = & H\ket{x_1} \otimes H\ket{x_2} \otimes \ldots H\ket{x_n} \\
+  = & \sum\limits_{y_1 \in \{0,1\}}{} (-1)^{x_1 y_1}\ket{y_1} \otimes
+      \sum\limits_{y_2 \in \{0,1\}}{} (-1)^{x_2 y_2}\ket{y_2} \otimes \ldots \otimes
+      \sum\limits_{y_n \in \{0,1\}}{} (-1)^{x_n y_n}\ket{y_n} \\
+  = & \frac{1}{\sqrt{2}^n} \sum\limits_{y \in \{0,1\}^n}^{}
+      \left[
+        (-1)^{x_1 y_1}\ket{y_1} \otimes 
+        (-1)^{x_2 y_2}\ket{y_2} \otimes \ldots \otimes
+        (-1)^{x_n y_n}\ket{y_n}
+      \right] \\
+  = & \frac{1}{\sqrt{2}^n} \sum\limits_{y \in \{0,1\}^n}^{}
+        (-1)^{x_1 y_1}
+        (-1)^{x_2 y_2} \ldots
+        (-1)^{x_n y_n} \ket{y} \\
+  = & \frac{1}{\sqrt{2}^n} \sum\limits_{y \in \{0,1\}^n}^{}
+       (-1)^{\sum\limits_{i=1}^{n} x_i y_i} \ket{y}
+  \end{array}
+  \end{mathpar}
+  
+  It is given that 
+  
+  \begin{mathpar}
+  H^{\otimes n} \ket{x_1 x_2 \ldots, x_n}
+    = 
+  \sum_{y \in \{0,1\}^n} \alpha_y \ket{y}
+  \end{mathpar}
+  
+  Therefore,
+  
+  \begin{mathpar}
+  \frac{1}{\sqrt{2}^n} \sum\limits_{y \in \{0,1\}^n}^{}
+       (-1)^{\sum\limits_{i=1}^{n} x_i y_i} \ket{y}
+    =
+  \sum_{y \in \{0,1\}^n} \alpha_y \ket{y}
+  \end{mathpar}
+  
+  which means
+  
+  \begin{mathpar}
+  \alpha_k
+    =  
+  \frac{1}{\sqrt{2}^n}
+  (-1)^{\sum\limits_{i=1}^{n} x_i y_i}
+  \end{mathpar}
+\end{solution}
+\end{parts}
+\end{questions}
+
+\end{document}
+

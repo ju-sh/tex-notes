@@ -1,0 +1,211 @@
+Try S0-S1 trick to handle the GP to get E(draws) = N
+
+
+if you make 2n draws then you will see marked ball with high probability.
+
+P(draws_count >= 2N) ≤ E(draws) =    N
+                       --------   --------
+		          2N        2N
+			  
+
+NQ: Why keep the ball back? Makes it similar to quantum search? => make analysis easier
+
+
+Gevivn: Trbrzrgevp qvfgevohgvba. => eryngrq gb ubj znal pbva gbffrf gvyy n urnq
+
+
+** Randomized search algorithm for search
+ 1) Sample from all n elements
+ 2) check if sampled element is marked
+    - If marked, stop. We are done
+    - otherwise goto step 1
+      
+   
+ - We have a list of elements L_i of N elements
+ - One element is marked
+ - Sample: each element can be chosen with P 1/N
+   
+t=turn count or sample count
+
+Suppose L_2 (i starting from 1) is the marked element.
+
+Turn 1: 
+#+begin_src 
+P_1  = [[1/N]
+        [1/N]
+        [1/N]
+         ...
+        [1/N]]
+#+end_src
+   
+
+Turn 2: 
+#+begin_src 
+P_2  = [[1/N]
+        [(N-1)/N² + 1/N]
+        [1/N]
+         ...
+        [1/N]]
+#+end_src
+Could reach each element 1/N * 1/N (see tree diagram)
+
+
+ - Initially all bars are same height 1/N
+ - T2: others 1/N - 1/N², special = 1/N + N-1/N² ≅ 1/N + 1/N
+ - T3: others 1/N - 1/N² - 1/N², special = 3/N
+ - At each turn, other elements will contribute P 1/N² to P of special element
+   + ie, N-1 contributions ≅ N contributions
+
+   
+After t steps, P of sepcial elem = t/N
+=> N steps => P ≅ 1
+
+The matrix could be like N⨯N
+
+#+begin_export latex
+\begin{mathpar}
+\begin{bmatrix}
+\frac{1}{N} \\
+\frac{1}{N} \\
+\frac{1}{N} \\
+  \vdots    \\
+\frac{1}{N} \\
+\frac{1}{N} \\
+\end{bmatrix}
+
+\Rightarrow
+
+\begin{bmatrix}
+\frac{N-1}{N^2} \\
+\frac{N-1}{N^2} + \frac{1}{N} \\
+\frac{N-1}{N^2} \\
+  \vdots        \\
+\frac{N-1}{N^2} \\
+\frac{N-1}{N^2} \\
+\end{bmatrix}
+\end{mathpar}
+#+end_export
+
+1/N        N-1/N²
+1/N        N-1/N² + 1/N   (DBT)
+1/N  --->  N-1/N²
+1/N	   N-1/N²
+1/N        N-1/N²
+
+#+begin_export latex
+\begin{bmatrix}
+ 1/N & 0 & 1/N & 1/N & ... & 1/N \\
+ 1/N & 1 & 1/N & 1/N & ... & 1/N \\
+ 1/N & 0 & 1/N & 1/N & ... & 1/N \\
+  .. & .. &    &     & ... & 1/N \\
+ 1/N & 0 & 1/N & 1/N & ... & 1/N \\
+ 1/N & 0 & 1/N & 1/N & ... & 1/N \\
+\end{bmatrix}
+#+end_export
+
+The matrix:
+ - 2nd column all zero except for row wspeical element ie, row 3
+ - all other elems = 1/N
+   
+The state col vec's row2 will tend to 1 after each mult
+ - 1-(1 - 1/N)^t
+   
+Classical oracle:
+
+#+begin_export latex
+\begin{mathpar}
+O(i) =
+    \begin{cases}
+      1 & \text{if $L_i$ is marked} \\
+      0 & \text{if $L_i$ is unmarked} \\
+    \end{cases}
+\end{mathpar}
+#+end_export
+   
+** Quantum setting (search)
+ - unitary * unit_vec = unit_vec
+   + where the vec is the state
+
+ - Initially all bars are same height 1/√N (equal SP)
+   + Instead of probability, we now have amplitude
+ - Each mult => increase P(marked elem) by 1/√N
+   + 1/√N is bigger than 1/N => quantum is better than randomized deterministic
+ - Turn2: Amplitude of all unmarked elems remain same = 1/√N
+   + Oracle: Puts a negative phase on the amplitude of marked element
+   + Amplidute of marked elem = -1/√N
+   + Amplitude so can be -ve unlike P
+ - Avg ampl on Turn1 = 1/√N
+ - Avg ampl on Turn2 = Slightly smaller than 1/√N because of the single -1/√N
+     
+   
+
+
+P vs amplitude: 
+ - P cannot cancel each other, amplitudes can
+ - P cannot be -ve, amplitdue can be
+   
+Quantum is /not/ about trying all possibilities at once ??
+
+quantum ops have to be unitary 
+ - dim of inp vec = dim of out vec  ??
+   
+#+begin_export latex 
+\begin{mathpar}
+
+\begin{array}{cl}
+ & 
+\begin{bmatrix}
+1 &  0 \\
+0 & -1 \\
+\end{bmatrix} \\
+%
+= & 
+2
+\begin{bmatrix}
+1 & 0 \\
+0 & 0 \\
+\end{bmatrix}
+-
+\begin{bmatrix}
+1 & 0 \\
+0 & 1 \\
+\end{bmatrix}
+\\
+= & 2\ket{0}\bra{0} - I \\
+\end{array}
+\end{mathpar}
+
+# [1  0
+#  0 -1]
+ 
+# = 2 [[1 0]  - [[1 0]
+#      [0 0]      0 1]]
+     
+# = 2 |0><0| - I
+
+# (projection)
+#+end_export
+
+This is true for all axis
+
+Relfection around |ψ> = 2|ψ><ψ| - I
+
+So, applicable to |ψ_E> as well = equal SP of all states = average
+
+Reflects around average 
+
+* Compilers
+ - Optimizations
+   * Like removing redundant gates
+ - A QC supports only a select few gates for simplicity
+ - PL: A higher abstr level 
+ - Given a unitary matrix, decompose and convert to gates??  
+ - QC compilers are called transpiler for historical reasons
+ - Barriers in qiskit: to prevent optimizations that transcend the barriers
+   
+   
+ - Not all qubits are connected ??
+   
+   
+   
+   

@@ -1,0 +1,90 @@
+* L1
+** Grover search with multiple marked elements
+ - t marked elems => (initial?) probability of getting marked elem = more
+ - |U> = eq sp over unmarked elems
+ - |M> = eq sp over marked elems
+   
+|
+|   /
+|  /
+| /
+|/ θ
++------------
+   
+ - What would θ be now?
+   + for 1 marked elem was 1/√N
+     
+\ket{\psi_E}  = 1/\sqrt{n}
+* L2: Quantum deep hedging
+ - Options and futures in stock trading
+ - Put option: Gives buyer right to buy a share if it crosses a /strike price/
+   + Call option: Strike price is higher than current price
+   + Put option: Strike price is lower than current price
+     * You have to pay some extra for this. A premium
+     * DBT: Mandatory to buy. Not for options
+     * You pay the premium upfront
+ - Options: gives a right to buy not mandatory    
+ - Futures: mandatory to buy
+ - You can even sell the options you hold. If it crosses strike price, premium will go up
+ - European options: There is a fixed time window
+   + just a name. a flavour of options
+   + not associated with only Europe
+ - Asian options 
+ - American options: not very popular
+   
+ - Adjust investments to minimise loss = hedging
+ - Banks are forbidden to trade themselves
+   + They are supposed to faciliate market
+   + So they try to maintain 0 loss 0 profit. expectation-wise
+   + There will still be some loss. covered by brockerage
+   + Better model => lower brockerage rate
+   + Different banks different models and different brokerage rate
+   + Aim = get as close to reality as possible
+     
+ - Deep hedging
+   + ∵ facilitated by deep NN ??
+   + Reinforcement learning + hedging
+ - Using this setup in a QC set-up = quantum deep hedging
+   + To see if there can be some advantage
+     
+   
+   
+       
+Misc:
+ - RL jargon
+   + policy search
+   + actor-critic
+ - quantum hardware is suited for dealing with P distributions
+ - Companies: IBM, Quantiuum
+ - DK
+   + Determinent and permentant corresponding to fermions and boson
+   + Boson encoding
+   + 8GHz computer = heating like a nuclear power plant or even the sun => not viable.
+   + End of Moore's law
+   + Future of QC
+     * Material science could catch up => realistic larger QC computers
+     * Quantum error correction
+ - DBT: why were options in stock market created
+ - Geometric brownian motion
+ - /Observables/ in quantum computing
+ - DBT: simulator vs emulator
+   + simulator: focus on software
+   + emulator: focus on software and hardware
+ - DBT: quantiunuum's own packages
+ - Black Scholes: an algo in finance (already old school)
+ - nisq quantum computer:
+   + current era qunatum computers ??
+   + https://en.wikipedia.org/wiki/Noisy_intermediate-scale_quantum_era
+   
+
+Work being discussed 
+ - FOSS with JP Morgan
+ - 2 parts
+   1) Classical env + QNN
+   2) Quantum env + quantum ML
+ - JAX python framework
+   
+#+begin_quote
+ML is an empirical science.
+Got to try to figure it out.
+#+end_quote

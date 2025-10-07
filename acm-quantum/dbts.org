@@ -1,0 +1,16 @@
+JR:
+ - Chebyshev probability equation graph: shade only left support ?
+ - Subgroup tiling the group. With what can we multiply for this?
+   
+RK:
+ - Proof of polynomial mult with DFT
+ - QFT derivation perhaps
+ - Period finding problem with QFT
+   + End up with many c_i/r from which we find r. How?
+   + Continued fraction ??
+ - HW suggested on 18th: Trying Gaussian elimination to appreciate lattice-based crypto
+
+PG:
+ - Z3 gave dunno. Can it always say UNSAT/SAT answer?
+
+   

@@ -1,0 +1,91 @@
+\chapter{Day 5: RM-1}
+
+A puzzle:
+\begin{itemize}
+\item n balls.
+\item one of them is marked
+\item At each turn, you can take a ball.
+\item If it is not marked, you keep it back and try again
+\item Aim is to find the marked ball
+\end{itemize}
+
+\begin{itemize}
+\item P(1st turn) = 1/n
+  \begin{itemize}
+  \item Turn 1: Found marked element => 1/n
+  \end{itemize}
+\item P(2nd turn) = (n-1)/n
+  \begin{itemize}
+  \item Turn 1: Found unmarked element => (n-1)/n
+  \item Turn 2: Found marked element => 1/n
+  \end{itemize}
+\item P(3rd turn) = $((n-1)^2)/n$
+  \begin{itemize}
+  \item Turn 1: Found unmarked element => (n-1)/n
+  \item Turn 2: Found unmarked element => (n-1)/n
+  \item Turn 3: Found marked element => 1/n
+  \end{itemize}
+\item P(k-th turn) = $((n-1)^(k-1))/n$
+\item Expectation:
+  \begin{mathpar}
+E(draws) = \sum_{k=1}^{\infty} k Pr(number of draw is marked)
+  \end{mathpar}
+\end{itemize}
+
+\begin{mathpar}
+  \begin{array}{rcl}
+E(draws) & = & \sum_{k=1}^{\infty} k Pr(Number of draw is marked) \\
+         & = & \frac{n-1}{n}^(k-1) \frac{1}{n} \\
+    %               failure prob    success p
+         & = & \frac{1}{n}^(k-1) \frac{1}{n} \\
+  \end{array}
+\end{mathpar}
+
+Answer is $n$.
+
+% \begin{mathpar}
+% \begin{bmatrix}
+% \frac{1}{N} \\
+% \frac{1}{N} \\
+% \frac{1}{N} \\
+%   \vdots    \\
+% \frac{1}{N} \\
+% \frac{1}{N} \\
+% \end{bmatrix}
+
+% \Rightarrow
+
+% \begin{bmatrix}
+% \frac{N-1}{N^2} \\
+% \frac{N-1}{N^2} + \frac{1}{N} \\
+% \frac{N-1}{N^2} \\
+%   \vdots        \\
+% \frac{N-1}{N^2} \\
+% \frac{N-1}{N^2} \\
+% \end{bmatrix}
+% \end{mathpar}
+
+\begin{mathpar}
+
+\begin{array}{cl}
+ & 
+\begin{bmatrix}
+1 &  0 \\
+0 & -1 \\
+\end{bmatrix} \\
+%
+= & 
+2
+\begin{bmatrix}
+1 & 0 \\
+0 & 0 \\
+\end{bmatrix}
+-
+\begin{bmatrix}
+1 & 0 \\
+0 & 1 \\
+\end{bmatrix}
+\\
+= & 2\ket{0}\bra{0} - I \\
+\end{array}
+\end{mathpar}

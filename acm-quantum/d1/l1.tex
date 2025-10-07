@@ -1,0 +1,212 @@
+\documentclass[12pt]{article}
+
+\input{../config.tex}
+
+\begin{document}
+
+\title{Lecture 1: Classical computation through circuits}
+\author{Lecturer: Jaikumar Radhakrishnan\\ Scribe: Julin Shaji}
+\date{June 09, 2025}
+\maketitle
+
+\section{Register states}
+\begin{itemize}
+\item
+  One register can hold one bit
+\item
+  State of a 1-bit register $\in \{0,1\}$
+\item
+  State of a 2-bit register $\in \{0,1\}^2 = \{00,01,10,11\}$
+\item
+  State of an n-bit register $\in \{0,1\}^n$. ie, set of all n-length
+  binary strings
+\item 
+  One hot encoding $\Rightarrow$ n-bit state can represented by a
+  vector of length $2^n$
+  
+  \begin{mathpar}
+   00 \Rightarrow%
+\begin{bmatrix}
+  1 \\
+  0 \\
+  0 \\
+  0 \\
+\end{bmatrix}
+
+   01 \Rightarrow%
+\begin{bmatrix}
+  0 \\
+  1 \\
+  0 \\
+  0 \\
+\end{bmatrix}
+
+   10 \Rightarrow%
+\begin{bmatrix}
+  0 \\
+  0 \\
+  1 \\
+  0 \\
+\end{bmatrix}
+
+   11 \Rightarrow%
+\begin{bmatrix}
+  0 \\
+  0 \\
+  0 \\
+  1 \\
+\end{bmatrix}
+  \end{mathpar}
+\end{itemize}
+
+\section{Representing functions}
+\subsection{Truth table}
+Any deterministic Boolean function can be represented by means of its
+truth table.
+
+Example: AND operation
+
+% \begin{center}
+\begin{tabular}{cc|c}
+  \toprule
+  A & B & C \\
+  \midrule
+  0 & 0 & 0 \\
+  0 & 1 & 0 \\
+  1 & 0 & 0 \\
+  1 & 1 & 1 \\
+  \bottomrule
+\end{tabular}
+% \end{center}
+%
+\begin{mathpar}
+  \begin{bmatrix}
+     1 & 1 & 1 & 0 \\ 
+     0 & 0 & 0 & 1 \\ 
+  \end{bmatrix}
+\end{mathpar}
+
+% Self-check-1
+Even parity gate (true if parity is even, essentially XNOR gate):
+
+\begin{center}
+\begin{tabular}{cc|c}
+  \toprule
+  A & B & C \\
+  \midrule
+  0 & 0 & 1 \\
+  0 & 1 & 0 \\
+  1 & 0 & 0 \\
+  1 & 1 & 1 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{mathpar}
+M_{T_1} =
+  \begin{bmatrix}
+     0 & 1 & 1 & 0 \\ 
+     1 & 0 & 0 & 1 \\ 
+  \end{bmatrix}
+
+M_{T_2} =
+  \begin{bmatrix}
+     1 & 0 \\ 
+     0 & 1 \\ 
+  \end{bmatrix}
+
+M_{T_3} =
+  \begin{bmatrix}
+     0 & 0 & 1 & 0 & 1 & 0 & 0 & 0 \\ 
+     0 & 0 & 0 & 1 & 0 & 1 & 0 & 0 \\ 
+     1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\ 
+     0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 \\ 
+  \end{bmatrix}
+\end{mathpar}
+
+\section{Kronecker product}
+\begin{itemize}
+\item
+  $A \otimes B$
+\item
+  Named after German mathematician Leopold Kronecker (1823-1891).
+\item 
+  Take each element of $A$ and multiply it with the entire $B$. The
+  resultant matrix will take the position of that element in $A$.
+\item
+  Oversimplification:
+  Think of it as a copy of $B$ being inserted wherever the element
+  is non-zero in $A$
+\end{itemize}
+
+\section{Sequential composition}
+\begin{itemize}
+\item Operation 1: $M_1$
+\item Operation 2: $M_2$
+\item Operation 1, then operation 2: $M_2 \cdot M_1$
+\end{itemize}
+
+\section{Parallel operations}
+\begin{itemize}
+\item Operation 1: $M_1$
+\item Operation 2: $M_2$
+\item Operation 1 and operation 2: $M_1 \otimes M_2$
+\end{itemize}
+
+\section{Misc}
+\subsection{Hadamard product}
+\begin{itemize}
+\item Element-wise matrix multiplication
+\item Both operand matrices must be of the same shape
+\item Like matrix addition but with multiplication as the operation
+\end{itemize} 
+
+\subsection{Fourier transform}
+\begin{itemize}
+\item Converts a function in time domain to frequency domain 
+\end{itemize}
+
+\subsection{Hadamard transform}
+\begin{itemize}
+\item Has a crucial role in quantum computing
+\item A generalized form of Fourier transform
+\item By Jacques Hadamard, Hans Rademacher, Joseph Walsh
+\item Is a \emph{Hadamard matrix} $H_m$ of shape $2^m \times 2^m$
+\item Excluding the normalization factor, $H_m$ consists entirely of $1$ and $-1$
+\end{itemize}
+
+Recursive definition:
+
+\begin{mathpar}
+ H_0 = 1 
+ 
+H_m = \frac{1}{\sqrt{2}}%
+\begin{pmatrix}
+  H_{m-1} & H_{m-1} \\
+  H_{m-1} & -H_{m-1} \\
+\end{pmatrix}
+\end{mathpar}
+
+\subsection{Toffoli gate}
+\begin{mathpar}
+Toff(x, y, z) = (x, y, z \oplus xy)
+\end{mathpar}
+
+\begin{itemize}
+\item AND(x,y) = Toff(x, y, x) = Toff(x, y, y)
+\item XOR(x,y) = Toff(1, y, x)
+\end{itemize}
+
+\subsection{More}
+\begin{itemize}
+\item Toffoli gate and Fredkin gate: reversible universal gates
+\item
+  DBT: How to use parallelize OR-AND?\\
+  The matrix would be $4 \times 16$.\\
+  How would input vector look like?\\
+  ANS: 4 inputs $\Rightarrow 2^4 \Rightarrow$ state space can be
+  represented via one-hot-encoding as a vector of length 16. 
+  
+  DBT: So a translation is needed? From two 4-size vectors to a
+  single 16-size vector?
+\end{itemize}

@@ -1,0 +1,41 @@
+\documentclass[12pt]{exam}
+
+\input{../config.tex}
+
+\title{Quiz 5}
+\author{\tiny{JS}}
+\date{11 June 2025}
+
+\begin{document}
+\url{https://acm-qc-summer-school.gitlab.io/assets/pdfs/quiz5.pdf}
+
+\maketitle
+\printanswers
+
+\begin{questions}
+
+\question
+Consider the following circuit.
+
+\begin{center}
+  \begin{quantikz}
+    \lstick{\ket{x}} & \gate[3]{\text{Toffoli}} & \rstick{\ket{x}} \\
+    \lstick{\ket{y}} &                   & \rstick{\ket{y}} \\
+    \lstick{\ket{-}} &                   & 
+  \end{quantikz}
+\end{center}
+
+Let $\ket{-}$ be equal to the state $H\ket{1}$. Let $a_{00}$,
+$a_{01}$, $a_{10}$, $a_{11}$ be amplitudes such that,
+
+\begin{mathpar}
+T(\ket{00}_{xy} \ket{-}) = a_{00} \ket{00}_{xy} \ket{-} \\
+T(\ket{01}_{xy} \ket{-}) = a_{01} \ket{01}_{xy} \ket{-} \\
+T(\ket{10}_{xy} \ket{-}) = a_{10} \ket{10}_{xy} \ket{-} \\
+T(\ket{11}_{xy} \ket{-}) = a_{11} \ket{11}_{xy} \ket{-} \\
+\end{mathpar}
+
+Write down the values of $a_{00}$, $a_{01}$, $a_{10}$, $a_{11}$.
+
+\end{questions}
+\end{document}

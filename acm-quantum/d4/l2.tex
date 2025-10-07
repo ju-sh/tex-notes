@@ -1,0 +1,194 @@
+\documentclass[12pt]{article}
+
+\input{../config.tex}
+
+\begin{document}
+
+\title{Lecture 2: Quantum Search}
+\author{Lecturer: Rajat Mittal\\ Scribe: Julin Shaji}
+\date{June 12, 2025}
+\maketitle
+
+Notes: \url{https://acm-qc-summer-school.gitlab.io/assets/pdfs/grover.pdf}
+
+Also see: \url{https://youtu.be/hnpjC8WQVrQ}
+
+\section{Grover's algorithm}
+\begin{itemize}
+\item A quantum algorithm for searching.
+\item Grover database search algorithm~\cite{grover1996fast} (1996)
+\item
+  Finds with high probability input for a particular output wrt to
+  a function $f$
+\item
+  Needs only O($\sqrt(n)$) evaluations of $f$, where $n$ is size
+  of $Domain(f)$
+\item Best classical algorithm => $\Theta(n)$ time
+\item Grover's algorithm => O($\sqrt(n)$)
+\item A quadratic speedup.
+  \begin{itemize}
+  \item
+    Not an exponential speedup, but still quite significant for
+    large $n$
+  \item
+    Eg: A 128-bit key used in symmetric cryptography could be
+    brute forced with $2^{64}$ iterations 
+  \end{itemize}
+\item Algorithm created by Lov Grover
+  \begin{itemize}
+  \item He has Indian roots
+  \item Born in Meerut, UP
+  \item Bachelor's from IIT Delhi
+  \end{itemize}
+\end{itemize}
+
+
+\begin{itemize}
+\item Input:
+  \begin{itemize}
+  \item An unstructured database. Think of it as a list $L$ of size $n$.
+  \item $L \in \{01\}^n$
+  \item Some of the elements of $L$ are 'marked'
+  \item $L_i = 1$ if $L_i$ is marked
+  \item Randomly distributed values
+  \item
+    So the best we can do in classical setting is to examine all one
+    by one.
+  \item There is an oracle $O$ that tells whether a particular element of
+    $L$ is marked 
+  \item $O(L_i) = 1$ if $L_i$ is marked
+  \end{itemize}
+\item Output:
+  \begin{itemize}
+  \item Find the position of a marked element in $L$
+  \item With minimal number of queries to the oracle
+  \item
+    Could be thought of as finding the input for a desired value of
+    the function
+  \item
+    Could be thought of as a decision problem if what we are
+    asking is the existence of a marked element.
+  \end{itemize}
+\end{itemize}
+
+There are many variants of Grover's search algorithm.
+
+About the oracle:
+
+\begin{itemize}
+\item Oracle is not the entire function
+\item It is just a verifier
+\item Eg: In a SAT problem for a CNF formula, oracle can check if a
+  given set of values evaluate to true. 
+\item 
+  Quantum algorithms are helpful to solve NP-Complete problems because
+  their solutions are easy to verify $\Rightarrow$ oracle.
+\end{itemize}
+
+\subsection{Grover with exactly one marked element}
+Assumptions:
+\begin{itemize}
+\item Number of marked elements = 1
+\item $n = 2^k$ which makes the index $i$ a k-bit string
+\end{itemize}
+
+$L$ can be thought of as the truth table for a function
+$f: \{01\}^k \mapsto {01}$ like this:
+
+\begin{mathpar}
+  f(i) =
+  \begin{cases}
+      1 & L_i \text{ is marked} \\
+      0 & L_i \text{ is unmarked} \\
+  \end{cases}
+\end{mathpar}
+
+What the oracles tells us is:
+\begin{itemize}
+\item $\ket{i, b} \mapsto \ket{i, b \oplus f(i)}$
+\item $i$ is a k-bit string
+\item $b$ is a 1-bit string. Let its initial value be $0$
+\item This can be made as:
+  \begin{mathpar}
+O_f(\ket{i, b}) = (-1)^{f(i).b}\ket{i, b}
+  \end{mathpar}
+   % DBT: -1^(f(i) why mult by b ?
+\end{itemize}
+
+\begin{itemize}
+\item 
+  Given the oracle $O_f$, we need to find an $i$ such that $f(i)$
+  would give $1$ with minimum number of queries to oracle.
+\item 
+  Randomized setting:
+  Only option is to keep randomly selecting $L_i$ values till oracle
+  says all right.\\
+  Needs $\Omega(n)$ queries to oracle.
+\item 
+  We need to get probability close to constant.
+\end{itemize}
+
+
+\begin{itemize}
+\item There is only one marked element, say $x$
+\item State of marked elements: $\ket{M} = \ket{x}$
+  \begin{itemize}
+  \item Because there is only one marked element
+  \item If we were to choose an element from the set of marked
+    elements, we would choose it with probability 1
+  \end{itemize}
+\item State of unmarked elements:
+  \begin{mathpar}
+  \ket{U} = \frac{1}{\sqrt{n}}\sum_{L_i \neq x}\ket{L_i}
+  \end{mathpar}
+  \begin{itemize}
+  \item Because there are $n-1$ unmarked elements
+  \item We pick them with probability $\frac{1}{n}$
+  \item Therefore amplitude of each component would be $\frac{1}{\sqrt{n}}$
+  \end{itemize}
+\end{itemize}
+
+
+\begin{itemize}
+\item For a quantum algorithm, we need an initial state.
+\item
+  Let's make an equal superposition with Walsh-Hadamard transform
+  ($H^{\otimes n}$)
+\item 
+  \begin{mathpar}
+    \ket{\psi} = \frac{1}{\sqrt{n}} \sum_{i} \ket{L_i}
+  \end{mathpar}
+\item At this point, probability of finding $x$ is same as finding any
+  other index = $\frac{1}{\sqrt{n}}^2 = \frac{1}{n}$, which is quite small
+\item We need to move this probability closer to the state of
+  finding a marked element: $\ket{M}$
+\item $\ket{U}$ and $\ket{M}$ are orthogonal to each other.
+\item Initially, $\ket{\psi}$ is very close to $\ket{U}$ and far from $\ket{M}$
+  \begin{mathpar}
+    \begin{array}{rcl}
+      % \st{%
+\ket{\psi} & = & \alpha\ket{M} + \beta\ket{U} \\
+           & = & \frac{1}{\sqrt{n}}\ket{M} +
+                 \frac{n-1}{\sqrt{n}}\ket{M} \\
+      % }
+\\
+\ket{\psi} & = & cos\theta\ket{M} + sin\theta\ket{U} \\
+    \end{array}
+  \end{mathpar}
+  DBT: But how would we know $\theta$
+\end{itemize}
+
+\begin{itemize}
+\item
+  The oracle returns $-\ket{\psi}$ if $i$ is marked, which we use
+  to rotate via reflections to move $\ket{\psi}$ closer to $\ket{M}$.
+\item
+  If $i$ is for an unmarked element, oracle returns $\ket{\psi}$
+  itself, leaving the state unchanged
+\item
+  The state $\ket{\psi}$ must remain on the unit circle in the
+  plane formed by $\ket{M}$ and $\ket{U}$.
+\end{itemize}
+
+
+\end{document}

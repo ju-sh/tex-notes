@@ -1,0 +1,23 @@
+
+|φ_1> 
+
+NOT not distinguishable
+but hadamard application a specific reg gives different result in reg1, for fun also try reg2
+
+we have been looking at pure quantum states
+ - fix one reg value and look at other => mixed state via a density matrix
+ - mix state upon partial measurement ??
+ - density matrix
+   + trace =1 
+   + rank 2 = entangled
+   + rank 1 = no entanglement ??
+ - entropy of a pure state = 0 ??, that of mix state ≠ 0 ??
+ - quantum computing is quite simple if you keep physics out of it.
+ - start with 1 H compute H agian => -1 form of function
+ - phase kickback
+ - H => place function in amplitude/phase. now oracle can't see it, but apply H gate again it's back to state ??
+   + see deutsch-josza
+ - 
+   
+   
+   
