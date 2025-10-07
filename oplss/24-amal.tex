@@ -1,0 +1,389 @@
+\documentclass{article}
+\usepackage{amsmath} % for \text
+\usepackage{amssymb} % for \mathbb
+\usepackage{mathpartir}
+\usepackage{subcaption}  % for subfigures
+\usepackage{turnstile}
+\usepackage{stmaryrd} % for oxford braces
+\usepackage{unicode-math} % for ≝
+
+\newcommand\pr{\vdash}
+\newcommand\sem[1]{\llbracket #1 \rrbracket}
+
+\title{}
+\author{}
+\date{}
+
+\begin{document}
+\section{Notations}
+\begin{itemize}
+\item $\Gamma \vdash e : \tau$: Syntactically well-typed
+\item $\Gamma \models e : \tau$: Semantically well-typed
+\item $G\sem{\Gamma}$:
+  Substitutions possible from a context $\Gamma$.\\
+  The $G$ is for 'good substitutions'.
+\item $\gamma$:
+  Mappings from variables of a particular type to values
+  of that type.\\
+  Eg: $\gamma = \{x_1 \mapsto v_1, x_2 \mapsto v_2, \ldots \}$, where
+  $x_i \in \Gamma$
+\end{itemize}
+
+%\chapter{Day 1}
+STLC
+\begin{itemize}
+\item No recursive functions
+\item No recursive types
+\end{itemize}
+
+\section{Logical relations}
+\begin{itemize}
+\item
+  A very general technique
+\item
+  Lets us prove some property of interest.
+  The logical relation has to set up accordingly.
+\item
+  Example situations where logical relations can be used:
+  \begin{itemize}
+  \item
+    Termination if the type theory has no recursion (\emph{not}
+    the focus of this lecture series)
+  \item
+    Type safety/soundness (we will be looking at this in this
+    lecture series)
+  \item
+    Program equivalence.
+  \end{itemize}
+\end{itemize}
+
+Program equivalence is a \emph{binary property}. Relation
+between two \emph{different} programs.
+Logical relations are often useful for proofs involving binary
+properties.
+
+\begin{itemize}
+\item Unary logical relation: $P_\tau(e)$ ('p' for property of interest)
+  Could be a set of programs with the type $\tau$, where
+  The relation $P$ is indexed by the types available in the
+  language.\\
+  We will look at STLC, where there are only two types: booleans and arrows.
+\item Binary logical relation: $R_\tau(e_1, e_2)$
+  Could be a relation between two programs $e_1$ and $e_2$.
+\end{itemize}
+
+Representation independence:
+\begin{itemize}
+\item
+  Data structure itself doesn't matter for correctness.
+  Only interface does.
+\item
+  Eg: A stack interface may be implemented using an array or a
+  linked list. We won't know the difference.
+\end{itemize}
+
+\section{Aim}
+A logical relation indexed by source types, but inhabited by target terms.
+These are realizability relations.
+Indicates when a target term realizes the behaviour dictated by the source type.  
+
+Uses: Verification of FFIs 
+
+This lecture series will focus on:
+\begin{itemize}
+\item Unary logical relations
+\item Type safety
+\end{itemize}
+
+Not covered in detail:
+\begin{itemize}
+\item Binary logical relations
+\end{itemize}
+
+\section{STLC}
+We consider the source language shown in Fig.~\ref{fig:grm-src-lang}.
+
+\begin{figure}
+  \centering
+  \begin{minipage}{0.35\textwidth}
+  \begin{subfigure}{1.0\linewidth}
+    \begin{mathpar}
+      \begin{array}{rcl}
+      \tau & := & \mathbb{B}                                   \\
+           & |  & \tau \to \tau                                \\
+      \end{array}
+    \end{mathpar}
+    \caption{Types}
+    \label{fig:grm-src-types}
+  \end{subfigure}
+  %
+  \begin{subfigure}{1.0\linewidth}
+    \begin{mathpar}
+      \begin{array}{rcl}
+        v  & := & tru\ |\ fls                                   \\
+           & |  & \lambda x: \tau.\ e                          \\
+      \end{array}
+    \end{mathpar}
+    \caption{Values}
+    \label{fig:grm-src-val}
+  \end{subfigure}
+  \end{minipage}
+  %\hfill
+  \begin{subfigure}[c]{0.40\textwidth}
+    \centering
+    \begin{mathpar}
+      \begin{array}{rcl}
+         e & := & x                                            \\
+           & |  & tru\ |\ fls                                   \\
+           & |  & \text{if}\ e\ \text{then}\ e\ \text{else}\ e \\
+           & |  & \lambda x: \tau.\ e                          \\
+           & |  & e\ e                                         \\
+      \end{array}
+    \end{mathpar}
+    \caption{Expressions}
+    \label{fig:grm-src-expr}
+  \end{subfigure}
+  \caption{Source language}
+  \label{fig:grm-src-lang}
+\end{figure}
+
+Evaluation context (Fig.~\ref{fig:src-eval-ctxt}):
+\begin{itemize}
+\item 
+  Indicates the part of the program which needs to be evaluated next.
+\item 
+  Where to focus next.
+Our source language is: 
+  \begin{itemize}
+  \item Call by value
+  \item Evaluate from left to right
+  \end{itemize}
+\end{itemize}
+
+\begin{figure}
+  \centering
+    \begin{mathpar}
+      \begin{array}{rcl|l}
+         E & :=
+           & [.]
+           & \text{Nothing left to evaluate}                  \\
+           %
+           & |
+           & tru\ |\ fls
+           & \text{Evaluate condition first}                  \\
+           %
+           & | 
+           & \text{if}\ E\ \text{then}\ e_1\ \text{else}\ e_2
+           & \text{Evaluate left first}                       \\
+           %
+           & |
+           & v\ E
+           & \text{Evaluate right only after left}            \\
+      \end{array}
+    \end{mathpar}
+  \caption{Evaluation context}
+  \label{fig:src-eval-ctxt}
+\end{figure}
+
+Reduction rules aka evaluation steps (Fig.\ref{fig:src-redn-rules}).
+
+\begin{figure}
+  \centering
+    \begin{mathpar}
+      \text{if}\ tru\ \text{then}\ e_1\ \text{else}\ e_2 \mapsto e_1 \\
+      \text{if}\ fls\ \text{then}\ e_1\ \text{else}\ e_2 \mapsto e_2
+    \end{mathpar}
+    \begin{mathpar}
+      (\lambda x:\tau.\ e) v \mapsto e[v/x]
+      
+      \inferrule*{
+        e \mapsto e'
+      }{
+        E[e] \mapsto E[e']
+      }
+    \end{mathpar}
+  \caption{Reduction rules}
+  \label{fig:src-redn-rules}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{mathpar}
+    \inferrule*{
+      \Gamma(x) = \tau
+    }{
+      \Gamma \pr x:\tau
+    } \\
+
+    \inferrule*{ }{
+      \Gamma \pr tru: \mathbb{B}
+    }
+
+    \inferrule*{ }{
+      \Gamma \pr fls: \mathbb{B}
+    } \\
+
+    \inferrule*{
+      \Gamma, x:\tau_1 \pr e:\tau_2
+    }{
+      \Gamma \pr (λx:\tau1. e): \tau1→\tau2
+    }
+
+    \inferrule*{
+      \Gamma \pr e_1:\tau_1→\tau_2 \\
+      \Gamma \pr e2:\tau1
+    }{
+      \Gamma \pr (e_1 e_2): \tau_2
+    } \\
+
+    \inferrule*{
+      \Gamma \pr e:\mathbb{B} \\
+      \Gamma \pr e_1:\tau     \\
+      \Gamma \pr e_2:\tau
+    }{
+      \Gamma \pr (\text{if}\ e\ \text{then}\ e_1\ \text{else}\ e_2): \tau
+    }
+  \end{mathpar}
+  \caption{Reduction rules}
+  \label{fig:src-typing-rules}
+\end{figure}
+
+Typing context (Fig.~\ref{fig:grm-eval-ctxt}):
+\begin{itemize}
+\item A list
+\item Indicates types of variables
+\item Part of assumptions
+\item
+  Empty context means no info is known yet.
+  ie, the program has no free variables.
+\end{itemize}
+
+\begin{figure}
+  \centering
+    \begin{mathpar}
+      \begin{array}{rcl|l}
+    \Gamma & := & \cdot & \text{Empty context} \\
+           & |  & \Gamma, x:\tau & \text{Add } x:\tau \text{ to context} \\
+      \end{array}
+    \end{mathpar}
+  \caption{Typing context}
+  \label{fig:grm-eval-ctxt}
+\end{figure}
+
+%%%%%%%%%%%
+
+Our focus:
+\begin{itemize}
+\item A unary logical relation
+\item To prove type soundness. ie, type safety (absence of 'stuckness'). 
+\item
+  Property of interest: $safe(e)$
+  (See Fig.~\ref{fig:prop-of-interest})
+\end{itemize}
+
+\begin{figure}
+  \centering
+  \begin{mathpar}
+  \cdot \vdash e: \tau
+  e \mapsto^* e' \text{then}
+  val(e') \lor e' \mapsto^* e''
+  \end{mathpar}
+  
+Or in other words for us:
+
+\begin{mathpar}
+  \cdot \vdash e: \tau \text{ then } safe(e) \\
+  safe(e) \eqdef \forall e', \\
+    e \mapsto^* e' \implies val(e') \lor \\
+    \exists e'', e' \mapsto e''
+\end{mathpar}
+  \caption{Property of interest}
+  \label{fig:prop-of-interest}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{mathpar}
+V\sem{\mathbb{B}}        =  \{tru, fls\}                                 \\
+
+    \begin{array}{rcl}
+V\sem{\tau_1 \to \tau_2} & = & \{\lambda x: \tau_1.\ e \\
+                         & &   \mid e[v/x] \in E\sem{\tau_2}  \\
+                         & &   , \forall v \in V\sem{\tau_1} \} \\
+    \end{array} \\
+
+    \begin{array}{rcl}
+E[\tau] & = & \{e \mid \forall e', e \mapsto^* e' \\
+        &   & \land\ irred(e') \\
+        &   & \land\ e' \in V\sem{\tau}\} \\
+    \end{array}
+  \end{mathpar}
+  \caption{
+    Semantics.
+    $V\sem{\tau}$ is the set of all values of type $\tau$ and
+    don't get stuck}
+  \label{fig:dst-val-expr}
+\end{figure}
+
+Substitutions (See Fig.~\ref{fig:sem-well-typed}):
+\begin{itemize}
+\item
+  Possible $\gamma$ values for a given $\Gamma$ are the possible
+  variable-value mapping for that $\Gamma$.
+\item 
+  An expression is semantically well-typed with type $\tau$ under the
+  context $\Gamma$,
+  if all possible variable-value mappings for the context $\Gamma$
+  results in an expression present in the set of all possible
+  expressions with type $\tau$.
+\item
+  For example, to prove for a closed term $\cdot \vdash e : \tau$,
+  we need $e \in E\sem{\tau}$.\\
+  To prove this, we need to prove $safe(e)$.
+\end{itemize}
+%
+% \begin{itemize}
+% \item $G\sem{\Gamma}$:
+%   Substitutions possible from a context $\Gamma$.\\
+%   The $G$ is for 'good substitutions'.
+% \item $\gamma$:
+%   Mappings from variables of a particular type to values
+%   of that type.\\
+%   Eg: $\gamma = \{x_1 \mapsto v_1, x_2 \mapsto v_2, \ldots \}$, where
+%   $x_i \in \Gamma$
+% \end{itemize}
+
+
+\begin{figure}
+  \centering
+  \begin{mathpar}
+    \begin{array}{rcl|l}
+      G\sem{\cdot}
+        & = 
+        & \{\phi\}
+        & \text{No possible substitutions} \\
+      G\sem{\Gamma, x:\tau}
+        & = 
+        & \{
+          % \begin{aligned}
+          %   & \gamma[x \mapsto v] \mid \\
+          %   & \gamma \in G\sem{\Gamma} \land \\
+          %   & v \in V\sem{\tau}  \\
+          % \end{aligned}
+            \gamma[x \mapsto v] \mid
+            \gamma \in G\sem{\Gamma} \land
+            v \in V\sem{\tau} 
+          \}
+        & \Gamma \text{ extended with } x \mapsto v \\
+    \end{array}
+    
+\Gamma \models e: \tau
+  \eqdef
+\forall \gamma \in G\sem{\Gamma},
+  \gamma(e) \in E[\tau]
+  \end{mathpar}
+  \caption{Fundamental property}
+  \label{fig:sem-well-typed}
+\end{figure}
+
+\end{document}

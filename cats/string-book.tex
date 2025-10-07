@@ -1,0 +1,73 @@
+\chapter{String diagram}
+\section{Mono and Epi}
+\begin{itemize}
+  \item \emph{Mono} arrow $f$
+        \begin{itemize}
+          \item $f \circ x_1 = f \circ x_2\ \Rightarrow \ x_1 = x_2$
+                \begin{itemize}
+                  \item $x_1\ x_2 : X \to A$
+                  \item $f : A \to B$
+                \end{itemize}
+          \item 'Left cancelable'
+          \item Eg: One-to-one functions in \textbf{Set} (injections)
+                \begin{itemize}
+                  \item Doubt: How? In \textbf{Set}, $x_1, x_2$ are like objects,
+                        not arrows.
+                \end{itemize}
+        \end{itemize}
+  \item \emph{Epi} arrow $f$
+        \begin{itemize}
+          \item $x_1 \circ f = x_2 \circ f \ \Rightarrow \ x_1 = x_2$
+          \item 'Right cancelable'
+          \item Eg: Onto functions in \textbf{Set} (surjections)
+        \end{itemize}
+  \item Doubt: Leibniz's context rules
+  \item \emph{Post-inverse} of an arrow $f$
+        \begin{itemize}
+          \item A functor $k$
+          \item $k \circ f = id_A$
+                \begin{itemize}
+                  \item $f : A \to B$
+                  \item $k : B \to A$
+                \end{itemize}
+          \item If such a $k$ exists, $f$ is a \emph{split mono}.
+                \begin{itemize}
+                  \item Doubt: Why mono? Why not epi?
+                \end{itemize}
+        \end{itemize}
+  \item \emph{Pre-inverse} of an arrow $f$
+        \begin{itemize}
+          \item A functor $h$
+          \item $f \circ h = id_B$
+                \begin{itemize}
+                  \item $f : A \to B$
+                  \item $h : B \to A$
+                \end{itemize}
+          \item If such a $h$ exists, $f$ is a \emph{split epi}.
+                \begin{itemize}
+                  \item Doubt: Why epi? Why not mono?
+                \end{itemize}
+        \end{itemize}
+\end{itemize}
+
+\section{More}
+\begin{itemize}
+\item Exponential
+  \begin{itemize}
+  \item With respect to two objects $A$ and $B$ in a category $C$
+  \item $C$ has products
+  \item Consists of:
+    \begin{itemize}
+    \item An object: $B^X$
+    \item An arrow: $apply: B^X \times X \to B$
+    \end{itemize}
+  \item Properties to satisfy:
+    \begin{itemize}
+    \item There exists an arrow $\Lambda f: A \to B^X$ (called \emph{curry})
+      \begin{itemize}
+        \item $\forall A \in C$, $f : B^X \times X \to B$
+      \end{itemize}
+    \item 
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
